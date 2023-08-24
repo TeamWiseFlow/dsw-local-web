@@ -3,11 +3,12 @@ import styled from 'styled-components'
 import './App.css';
 // import logo from './logo.svg';
 
-import { Outlet, NavLink } from 'react-router-dom';
+import { Outlet, NavLink, Link } from 'react-router-dom';
 
 import SearchFile from './components/SearchFile'
 import Login from './components/Login/Login'
 import useToken from './components/useToken'
+import Icons from './components/Icons';
 
 const Modal = styled.div`
   width: 500px;
@@ -37,13 +38,6 @@ const SideBar = styled.div`
       list-style-type: none;
       margin: 0;
       padding: 0;
-
-      & li a {
-        display: block;
-        text-decoration: none;
-        padding: 10px;
-        color: #666;
-      }
 
       & li a:hover  {
         background-color: #ebeef7;
@@ -100,6 +94,63 @@ const Content = styled.div`
   overflow-y: scroll;
 `
 
+const IconNavLink = styled(NavLink)`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  text-decoration: none;
+  padding: 10px;
+  color: #666;
+
+  & span svg path {
+      fill: #666;
+    }
+
+  &.active span svg path {
+      fill: #111;
+    }
+
+  & span[disabled] svg path {
+      fill: #ccc;
+    }
+ 
+`
+
+const LinkIcon = styled.span`
+    & svg {
+        width: 30px;
+        height: 30px;
+    }
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+`
+
+const MENU_ITEMS = [
+  {
+    to: '/',
+    title: '首页',
+    icon: Icons.Home
+  },
+  {
+    to: '/tools',
+    title: '财政助手',
+    icon: Icons.Apps
+  },
+  {
+    to: '/library',
+    title: '财政图书馆',
+    icon: Icons.Library,
+    disabled: true
+  },
+  {
+    to: '/gpt',
+    title: '财政GPT',
+    icon: Icons.Chat,
+    disabled: true
+  },
+]
 
 function App() {
   const [token, setToken] = useToken()
@@ -114,10 +165,16 @@ function App() {
         <SideBarHeader>欢迎回来，user</SideBarHeader>
         <nav>
           <ul>
-            <li><NavLink to={`/`} >首页</NavLink></li>
-            <li><NavLink to={`/tools`} >财政助手</NavLink></li>
-            <li><NavLink to={`/library`} disabled >财政图书馆</NavLink></li>
-            <li><NavLink to={`/gpt`} disabled >财政GPT</NavLink></li>
+            {
+              MENU_ITEMS.map(m => (
+                <li key={m.title}>
+                  <IconNavLink to={m.to} disabled={m.disabled}>
+                    <LinkIcon disabled={m.disabled}><m.icon></m.icon></LinkIcon>
+                    <span>{m.title}</span>
+                  </IconNavLink>
+                </li>
+              ))
+            }
           </ul>
         </nav>
         <SideBarFooter>

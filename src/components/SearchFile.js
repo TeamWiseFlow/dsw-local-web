@@ -3,6 +3,7 @@ import { debounce } from 'lodash'
 import { useState, useEffect, useMemo } from 'react'
 
 import Icons from './Icons'
+import { API_URL_FILE } from '../constants'
 
 const STYLE_CONFIG = {
     padding: 15,
@@ -130,7 +131,6 @@ const FileLink = (props) => {
  * 目前假设都是精确匹配文件名中关键词
  * 
  * fileList - [{name}]，文件列表，如果传入，则不调用API。
- * apiEndPoint - 查询文件列表的API地址，如未传入fileList，则调用此API。
  * rootDir - 相对根目录，如空，则由服务端指定，搜索默认为从此目录向下递归。
  * keyword - 搜索关键词, 匹配文件名部分。*则列出所有文件。
  * filters - 过滤条件，目前支持文件名后缀，在UI中选择。示例：{ 'ext': ['.xlsx', '.xls'] }。（可扩充支持文件大小、文件修改时间等）。（也可扩充keyword支持，如*.xlsx）。
@@ -138,7 +138,7 @@ const FileLink = (props) => {
  * 
  */
 const SearchFile = (props) => {
-    let { placeholder, apiEndPoint, fileList, rootDir, keyword, filters, onClose } = props;
+    let { placeholder, fileList, rootDir, keyword, filters, onClose } = props;
 
     filters = filters || {
         'ext': ['xlsx', 'xls'],
@@ -149,8 +149,8 @@ const SearchFile = (props) => {
     useEffect(() => {
         if (fileList && fileList.length > 0) {
 
-        } else if (apiEndPoint && inputValue) {
-            fetch(apiEndPoint, {
+        } else if (inputValue) {
+            fetch(API_URL_FILE, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

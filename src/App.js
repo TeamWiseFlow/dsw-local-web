@@ -1,26 +1,33 @@
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import './App.css';
 // import logo from './logo.svg';
 
-import SearchFile from './components/SearchFile';
+import SearchFile from './components/SearchFile'
+import Login from './components/Login/Login'
+import useToken from './components/useToken'
 
 const Modal = styled.div`
   width: 500px;
 `
 
-const API = {
-  FILE: 'http://localhost:3001/find'
-}
-
 function App() {
+  const [token, setToken] = useToken()
+
+  if (!token) {
+    return <Login setToken={setToken} />
+  }
+
   return (
     <div className="App">
 
       <Modal>
-        <SearchFile apiEndPoint={API.FILE} />
+        <SearchFile />
+
+        <a onClick={() => setToken("")}>登出</a>
       </Modal>
     </div>
   );
 }
 
-export default App;
+export default App

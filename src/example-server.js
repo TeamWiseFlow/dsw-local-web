@@ -34,6 +34,26 @@ router.post('/find', express.json(), cors(), (req, res) => {
     res.send(fileList);
 });
 
+router.post('/login', express.json(), cors(), (req, res) => {
+    if (!req.body.username || !req.body.password) {
+        res.status(400).send({
+            error: '用户名或密码不能为空'
+        })
+        return
+    }
+
+    if (req.body.username !== 'admin' || req.body.password !== 'admin') {
+        res.status(401).send({
+            error: '用户名或密码错误'
+        })
+        return
+    }
+
+    res.send({
+        token: 'test123'
+    })
+});
+
 // start server
 const app = express();
 app.use(cors());

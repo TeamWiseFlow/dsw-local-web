@@ -9,6 +9,12 @@ const Container = styled.div`
     width: 100vw;
     height: calc(100vh - 50px);
 `
+const Message = styled.p`
+    margin: 10px 0;
+    & i {
+        color: #aaa;
+    }
+`
 
 export default function ErrorPage() {
     const error = useRouteError();
@@ -16,11 +22,11 @@ export default function ErrorPage() {
 
     return (
         <Container>
-            <h1>Oops!</h1>
-            <p>Sorry, an unexpected error has occurred.</p>
-            <p>
+            <h1>错误</h1>
+            <Message>抱歉，出现了一些问题</Message>
+            <Message>
                 <i>{error.statusText || error.message}</i>
-            </p>
+            </Message>
         </Container>
     );
 }

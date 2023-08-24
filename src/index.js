@@ -9,6 +9,8 @@ import {
 
 import './index.css';
 import App from './App';
+import Tools from './tools/Tools';
+import SummarizeExcel from './tools/SummarizeExcel';
 import ErrorPage from './ErrorPage';
 
 const router = createBrowserRouter([
@@ -16,6 +18,16 @@ const router = createBrowserRouter([
     path: '/',
     element: <App />,
     errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "/tools",
+        element: <Tools />,
+      },
+      {
+        path: "/tools/sum",
+        element: <SummarizeExcel />
+      }
+    ],
   }
 ])
 

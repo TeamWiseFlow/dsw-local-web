@@ -18,7 +18,7 @@ const Form = styled.form`
     border: 1px solid #ddd;
     border-radius: 10px;
     /* box-shadow: 0 0 3px #ccc; */
-    padding: 20px;
+    padding: 10px 20px 40px 20px;
     background-color: #f8fbff;
 `
 

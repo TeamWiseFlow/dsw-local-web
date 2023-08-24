@@ -1,17 +1,134 @@
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
+import Icons from '../components/Icons'
+
+const Container = styled.div`
+
+    & ul {
+        list-style-type: none;
+        margin:0;
+        padding: 20px 40px;
+        display: flex;
+        gap: 20px;
+    }
+
+    & a {
+        width: 150px;
+        height: 150px;
+        border-radius: 10px;   
+        user-select: none;
+    }
+
+    & a[disabled]{
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    & a:hover {
+        transform: scale(1.01);
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        // animate hover
+        transition: transform 0.1s ease-in-out;
+    }
+
+    & svg {
+        width: 36px;
+        height: 36px;
+        margin-bottom: 10px;
+    }
+`
+
+const IconLink = styled(Link)`
+   background-color: ${props => props.color || '#ccc'};
+   text-decoration: none;
+   display: flex;
+   flex-direction: column;
+   padding: 20px;
+`
+const IconTitle = styled.h2`
+    color: #fff;
+    font-size: 1.2rem;
+    line-height: 1.2rem;
+    margin:0;
+    margin-bottom: 5px;
+
+`
+
+const IconDesc = styled.p`
+    color: #fff;
+    font-size: 0.9rem;
+`
+
+const Spacer = styled.div`
+    flex: 1;
+`
+
+const IconInfo = styled.p`
+    color: white;
+`
+
+const Header = styled.div`
+    padding: 20px 40px;
+`
+
+
+const ICONS = [
+    {
+        to: '/tools/sum',
+        disabled: false,
+        color: '#65adef',
+        icon: Icons.Graph,
+        title: '集采统计',
+        desc: '多预算文件汇总统计',
+        version: '1.0.0',
+        updated: '2023-08-01'
+    },
+    {
+        to: '/tools/alert',
+        disabled: true,
+        color: '#78d48e',
+        icon: Icons.Gear,
+        title: '预算预警',
+        desc: '',
+        version: '未开发',
+        updated: ''
+    },
+    {
+        to: '/tools/compare',
+        disabled: true,
+        color: '#e48c56',
+        icon: Icons.Gear,
+        title: '预决算对比',
+        desc: '',
+        version: '未开发',
+        updated: ''
+    }
+]
 
 export default function Tools() {
 
     return (
-        <div>
-            <h1>所有工具</h1>
-
+        <Container>
+            <Header>
+                <h1>所有工具</h1>
+            </Header>
             <ul>
-                <li><Link to={`/tools/sum`}>集采统计</Link></li>
-                <li><Link disabled>预算预警</Link></li>
-                <li><Link disabled>预决算对比</Link></li>
+                {
+                    ICONS.map(ico => (
+                        <li key={ico.title}>
+                            <IconLink to={`/tools/sum`} color={ico.color} disabled={ico.disabled}>
+                                <ico.icon></ico.icon>
+                                <IconTitle>{ico.title}</IconTitle>
+                                <IconDesc>{ico.desc}</IconDesc>
+                                <Spacer></Spacer>
+                                <IconInfo>{ico.version}</IconInfo>
+                                <IconInfo>{ico.updated}</IconInfo>
+                            </IconLink>
+                        </li>
+                    ))
+                }
+
             </ul>
-        </div>
+        </Container>
     )
 }

@@ -4,12 +4,15 @@ import Icons from '../components/Icons'
 
 const Container = styled.div`
 
+    overflow-y: scroll;
+
     & ul {
         list-style-type: none;
         margin:0;
         padding: 20px 40px;
         display: flex;
         gap: 20px;
+        flex-wrap: wrap;
     }
 
     & a {

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { Button } from '../components/Common'
 import Icons from '../components/Icons'
 import SearchFile from '../components/SearchFile'
@@ -60,17 +60,31 @@ const Modal = styled.div`
     height: auto;
 `
 
+const loadingAnimation = keyframes`
+  to {
+    clip-path: inset(0 -1ch 0 0)
+  }
+`
+
+const Loading = styled.div`
+  font-weight: bold;
+  display:inline-block;
+  font-family: monospace;
+  font-size: 20px;
+  clip-path: inset(0 6ch 0 0);
+  animation: ${loadingAnimation} 1s steps(7) infinite;
+`
+
 export default function SummarzieExcel() {
 
-    let [searchOpen, setSearchOpen] = useState(false)
     let [files, setFiles] = useState([])
     let [resultFile, setResultFile] = useState("")
+    let [loading, setLoading] = useState(false)
 
     const { ref, isComponentVisible, setIsComponentVisible } = useComponentVisible(false);
 
     const openSearch = () => {
         setIsComponentVisible(true)
-        setSearchOpen(true)
     }
 
     const selectFiles = (files) => {
@@ -82,8 +96,15 @@ export default function SummarzieExcel() {
     }
 
     const run = () => {
+        setLoading(true)
+
         // TODO: call api
-        setResultFile("result.xlsx")
+        setTimeout(() => {
+            setLoading(false)
+            setResultFile("result.xlsx")
+        }, 2000);
+
+
     }
 
     return (
@@ -94,12 +115,19 @@ export default function SummarzieExcel() {
             <Content>
                 <Button onClick={openSearch}>{files.length == 0 ? '选择文件' : '重新选择'}</Button>
                 <SelectResult>{files.length > 0 ? `已选择${files.length}个文件` : `请选择参与统计的文件`}</SelectResult>
-                <Button disabled={files.length == 0} onClick={run}>开始汇总</Button>
+
+                {
+                    loading &&
+                    <Loading>・・・</Loading> ||
+                    <Button disabled={files.length == 0} onClick={run}>开始汇总</Button>
+                }
                 <Result>
+
                     {
                         resultFile && <>
                             <h2>汇总结果</h2>
                             <hr></hr>
+
                             <Link href={resultFile} target="_blank">
                                 <Icons.Excel />下载结果文件
                             </Link>

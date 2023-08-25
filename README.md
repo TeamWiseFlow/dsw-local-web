@@ -1,5 +1,20 @@
 # DSW Web
 
+## 0825 dev
+
+启动demo服务端（登录、文件搜索）
+
+```
+npm run server
+```
+
+启动前端
+```
+  npm start
+```
+登录 admin/admin
+
+
 ## 9.10 milestone 开发
 
 - 后端，用户认证，文件管理/搜索，开发api服务

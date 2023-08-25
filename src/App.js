@@ -5,7 +5,7 @@ import './App.css'
 
 import { Outlet, NavLink, Link, BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
-import ErrorPage from './ErrorPage'
+import ErrorPage from './components/ErrorPage'
 import SearchFile from './components/SearchFile'
 import Login from './components/Login'
 import Tools from './tools/Tools'
@@ -13,6 +13,7 @@ import SummarizeExcel from './tools/SummarizeExcel'
 import Home from './components/Home'
 import useToken from './components/useToken'
 import Icons from './components/Icons'
+import PageNotFound from './components/PageNotFound'
 
 const Modal = styled.div`
   width: 500px;
@@ -198,6 +199,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="tools" element={<Tools />} />
           <Route path="tools/sum" element={<SummarizeExcel />} />
+          <Route path="*" element={<PageNotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>

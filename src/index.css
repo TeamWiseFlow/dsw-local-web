@@ -59,10 +59,6 @@ h6 {
   height: 100%;
 }
 
-p {
-  margin: 0;
-}
-
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -70,4 +66,12 @@ code {
 
 h1 {
   font-size: 1.4rem;
+}
+
+h2 {
+  font-size: 1.2rem;
+}
+
+p {
+  font-size: 0.9rem;
 }

@@ -16,8 +16,8 @@ const Container = styled.div`
     }
 
     & a {
-        width: 150px;
-        height: 150px;
+        width: 170px;
+        height: 170px;
         border-radius: 10px;   
         user-select: none;
     }
@@ -37,6 +37,8 @@ const Container = styled.div`
     & svg {
         width: 36px;
         height: 36px;
+        min-width: 36px;
+        min-height: 36px;
         margin-bottom: 10px;
     }
 `
@@ -46,7 +48,7 @@ const IconLink = styled(Link)`
    text-decoration: none;
    display: flex;
    flex-direction: column;
-   padding: 20px;
+   padding: 15px;
 `
 const IconTitle = styled.h2`
     color: #fff;
@@ -59,7 +61,6 @@ const IconTitle = styled.h2`
 
 const IconDesc = styled.p`
     color: #fff;
-    font-size: 0.9rem;
 `
 
 const Spacer = styled.div`
@@ -68,6 +69,7 @@ const Spacer = styled.div`
 
 const IconInfo = styled.p`
     color: white;
+    font-size: 0.8rem;
 `
 
 const Header = styled.div`

@@ -15,6 +15,7 @@ const Container = styled.div`
     flex-direction: column;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: white;
 `
 
 const Icon = styled.div`
@@ -126,19 +127,17 @@ const FileLink = (props) => {
 }
 
 /**
- * 传入文件列表，搜索文件名关键词筛选，支持多选，关闭时返回选中的文件列表
- * 如果没有传入文件列表，则调用API，返回查询到的文件列表。示例API实现见 glob.js
- * 目前假设都是精确匹配文件名中关键词
+ * 调用API搜索文件名关键词筛选，支持多选，返回选中的文件列表
  * 
- * fileList - [{name}]，文件列表，如果传入，则不调用API。
- * rootDir - 相对根目录，如空，则由服务端指定，搜索默认为从此目录向下递归。
+ * 目前假设都是精确匹配文件名中关键词，如服务器端glob实现：root/path/*keyword*.{xlsx,xls}
+ * root目录目前服务器指定
+ * 
  * keyword - 搜索关键词, 匹配文件名部分。*则列出所有文件。
  * filters - 过滤条件，目前支持文件名后缀，在UI中选择。示例：{ 'ext': ['.xlsx', '.xls'] }。（可扩充支持文件大小、文件修改时间等）。（也可扩充keyword支持，如*.xlsx）。
- * onClose - 关闭时返回选中的文件列表。
+ * onChange - 选择文件变化时的回调函数，返回选中的文件列表。
  * 
  */
-const SearchFile = (props) => {
-    let { placeholder, fileList, rootDir, keyword, filters, onClose } = props;
+const SearchFile = ({ placeholder, keyword, filters, onChange }) => {
 
     filters = filters || {
         'ext': ['xlsx', 'xls'],
@@ -147,9 +146,7 @@ const SearchFile = (props) => {
     let [inputValue, setInputValue] = useState(keyword || '');
     let [files, setFiles] = useState([]);
     useEffect(() => {
-        if (fileList && fileList.length > 0) {
-
-        } else if (inputValue) {
+        if (inputValue) {
             fetch(API_URL_FILE, {
                 method: 'POST',
                 headers: {
@@ -157,7 +154,6 @@ const SearchFile = (props) => {
                 },
                 body: JSON.stringify({
                     keyword: inputValue,
-                    rootDir,
                     filters
                 })
             }).then(res => res.json()).then(data => {
@@ -189,12 +185,18 @@ const SearchFile = (props) => {
     }
 
     const selectAll = () => {
-        setFiles(files.map(f => ({ ...f, selected: true })));
+        const updatedFiles = files.map(f => ({ ...f, selected: true }));
+        setFiles(updatedFiles);
     }
 
     const selectNone = () => {
-        setFiles(files.map(f => ({ ...f, selected: false })));
+        const updatedFiles = files.map(f => ({ ...f, selected: false }));
+        setFiles(updatedFiles);
     }
+
+    useEffect(() => {
+        onChange(files.filter(f => f.selected));
+    }, [files])
 
     return (
         <Container>

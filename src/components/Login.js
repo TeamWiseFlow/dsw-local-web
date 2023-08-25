@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import React, { useState } from 'react'
 import { API_URL_LOGIN, ERROR_LOGIN_EMPTY } from '../constants'
+import { Button } from './Common'
 
 const Container = styled.div`
     display: flex;
@@ -44,14 +45,6 @@ const Label = styled.label`
 const Error = styled.div`
     color: #ee4242;
     font-size: 14px;
-`
-
-const Button = styled.button`
-    border-radius: 5px;
-    background-color: #2a4aff;
-    color: white;
-    border: none;
-    padding: 5px 15px;
 `
 
 async function loginUser(credentials) {

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import React, { useState } from 'react'
-import { API_URL_LOGIN, ERROR_LOGIN_EMPTY } from '../../constants'
+import { API_URL_LOGIN, ERROR_LOGIN_EMPTY } from '../constants'
 
 const Container = styled.div`
     display: flex;
@@ -32,8 +32,6 @@ const Label = styled.label`
     & input {
         border: 1px solid #ddd;
         border-radius: 5px; 
-        height: 20px;
-        line-height: 20px;
         padding: 3px 5px;
     }
 

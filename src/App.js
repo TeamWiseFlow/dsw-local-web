@@ -1,14 +1,18 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import './App.css';
+import './App.css'
 // import logo from './logo.svg';
 
-import { Outlet, NavLink, Link } from 'react-router-dom';
+import { Outlet, NavLink, Link, BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
+import ErrorPage from './ErrorPage'
 import SearchFile from './components/SearchFile'
-import Login from './components/Login/Login'
+import Login from './components/Login'
+import Tools from './tools/Tools'
+import SummarizeExcel from './tools/SummarizeExcel'
+import Home from './components/Home'
 import useToken from './components/useToken'
-import Icons from './components/Icons';
+import Icons from './components/Icons'
 
 const Modal = styled.div`
   width: 500px;
@@ -152,13 +156,11 @@ const MENU_ITEMS = [
   },
 ]
 
-function App() {
+function Layout() {
   const [token, setToken] = useToken()
-
   if (!token) {
     return <Login setToken={setToken} />
   }
-
   return (
     <Container>
       <SideBar>
@@ -185,16 +187,20 @@ function App() {
         <Outlet />
       </Content>
     </Container >
+  )
+}
 
-
-
-
-    // <Modal>
-    //   <SearchFile />
-
-    //   <a onClick={() => setToken("")}>登出</a>
-    // </Modal>
-
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />} errorElement={<ErrorPage />}>
+          <Route index element={<Home />} />
+          <Route path="tools" element={<Tools />} />
+          <Route path="tools/sum" element={<SummarizeExcel />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

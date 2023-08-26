@@ -10,10 +10,11 @@ import Login from './components/Login'
 import Tools from './tools/Tools'
 import SummarizeExcel from './tools/SummarizeExcel'
 import Home from './components/Home'
+import Library from './components/Library'
 import Icons from './components/Icons'
 import PageNotFound from './components/PageNotFound'
 
-import { useStore } from './useStore'
+import { pb, useStore } from './useStore'
 
 const Container = styled.div`
   width:100%;
@@ -142,7 +143,6 @@ const MENU_ITEMS = [
     to: '/library',
     title: '财政图书馆',
     icon: Icons.Library,
-    disabled: true
   },
   {
     to: '/gpt',
@@ -153,15 +153,15 @@ const MENU_ITEMS = [
 ]
 
 function Layout() {
-  const { token, logout } = useStore()
+  const { logout } = useStore()
 
-  if (!token) {
+  if (!pb.authStore.token) {
     return <Login />
   }
   return (
     <Container>
       <SideBar>
-        <SideBarHeader>欢迎回来，user</SideBarHeader>
+        <SideBarHeader>欢迎回来，{pb.authStore.model.username}</SideBarHeader>
         <nav>
           <ul>
             {
@@ -195,6 +195,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="tools" element={<Tools />} />
           <Route path="tools/sum" element={<SummarizeExcel />} />
+          <Route path="library" element={<Library />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
       </Routes>

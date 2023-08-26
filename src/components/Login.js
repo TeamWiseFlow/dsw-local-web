@@ -65,7 +65,7 @@ export default function Login() {
 
         const res = await login({ username, password })
         if (res.error) {
-            setError(ERROR_LOGIN[res.code] || `未知错误(${res.code})`)
+            setError(ERROR_LOGIN[res.code || res.status] || `未知错误(${res.code || res.status})`)
             return
         }
     }

@@ -11,22 +11,20 @@ const useStore = create((set) => ({
         try {
             const userData = await pb.collection('users').authWithPassword(credentials.username, credentials.password)
             // console.log(userData) // TODO: save user name?
-
             set({ token: userData.token })
-            localStorage.setItem('token', userData.token);
             return userData
         } catch (err) {
-            return { error: true, ...err.response }
+            return { error: true, status: err.status, ...err.response }
         }
     },
     logout: () => {
         console.log('logout')
+        pb.authStore.clear()
         set({ token: '' })
-        localStorage.setItem('token', '')
     }
 
 }))
-
-useStore.setState({ token: localStorage.getItem('token') || '' })
+// initial states
+useStore.setState({ token: pb.authStore.token || '' })
 
 export { pb, useStore }

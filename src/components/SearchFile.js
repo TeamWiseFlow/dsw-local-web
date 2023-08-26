@@ -3,12 +3,7 @@ import { debounce } from 'lodash'
 import { useState, useEffect, useMemo } from 'react'
 
 import Icons from './Icons'
-import { API_URL_FILE } from '../constants'
-
-const STYLE_CONFIG = {
-    padding: 15,
-}
-
+import { API_URL_FILE, STYLE_CONFIG } from '../constants'
 
 const Container = styled.div`
     display:flex;

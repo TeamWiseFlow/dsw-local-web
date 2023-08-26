@@ -143,7 +143,7 @@ const SearchFile = ({ placeholder, keyword, filters, onChange }) => {
     let [inputValue, setInputValue] = useState(keyword || '');
     let [files, setFiles] = useState([]);
 
-    let { getFiles } = useStore()
+    let { getFiles, setErrorMessage } = useStore()
 
     useEffect(() => {
         if (inputValue) {
@@ -152,9 +152,9 @@ const SearchFile = ({ placeholder, keyword, filters, onChange }) => {
                 let res = await getFiles(inputValue, filters)
                 if (res.error) {
                     if (res.status >= 400) {
-                        console.log(ERROR_HTTP[400])
+                        setErrorMessage(ERROR_HTTP[400])
                     } else {
-                        console.log(res)
+                        setErrorMessage(ERROR_HTTP[res.status] || ERROR_HTTP[0])
                     }
                 } else {
                     setFiles(res)

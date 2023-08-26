@@ -9,6 +9,7 @@ const useStore = create((set) => ({
 
     token: '',
     files: [],
+    errorMessage: '',
     login: async (credentials) => {
         try {
             //const userData = await pb.collection('users').authWithPassword(credentials.username, credentials.password)
@@ -42,7 +43,13 @@ const useStore = create((set) => ({
             //console.log(err.status, err.response)
             return { error: true, status: err.status, ...err.response }
         }
-    }
+    },
+    setErrorMessage: (msg) => {
+        set({ errorMessage: msg })
+        setTimeout(() => {
+            set({ errorMessage: '' })
+        }, 3000)
+    },
 }))
 // initial states
 useStore.setState({ token: pb.authStore.token || '' })

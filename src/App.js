@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import './App.css'
 
 import { Outlet, NavLink, Link, BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
@@ -128,6 +128,33 @@ const LinkIcon = styled.span`
     align-items: center;
 `
 
+const slidedown = keyframes`
+  from {
+    top: -100px;
+  }
+
+  to {
+    top: 0;
+  }
+`
+
+const ErrorBar = styled.div`
+  position: absolute;
+  top:0;
+  left: 40%;
+  min-width: 200px;
+  max-width: 500px;
+  margin-left:0;
+  margin-right:0;
+  background-color: #faeeed;
+  color: #582522;
+  padding: 10px 20px;
+  animation: ${slidedown} 0.3s ease-in-out;
+  border: 1px solid #f5c6c4;
+  border-radius: 0 0 5px 5px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+`
+
 const MENU_ITEMS = [
   {
     to: '/',
@@ -153,7 +180,7 @@ const MENU_ITEMS = [
 ]
 
 function Layout() {
-  const { logout } = useStore()
+  const { logout, errorMessage } = useStore()
 
   if (!pb.authStore.token) {
     return <Login />
@@ -182,6 +209,7 @@ function Layout() {
       </SideBar>
       <Content>
         <Outlet />
+        {errorMessage && <ErrorBar>{errorMessage}</ErrorBar>}
       </Content>
     </Container >
   )

@@ -1,11 +1,10 @@
 import { create } from 'zustand'
 import PocketBase from 'pocketbase'
-import { API_URL_BASE, ERROR_LOGIN } from './constants'
-import { filter } from 'lodash'
+import { API_URL_BASE, ERROR_LOGIN, ERROR_HTTP } from './constants'
 const pb = new PocketBase(API_URL_BASE)
 console.log('init pocketbase')
 // pocketbase
-const useStore = create((set) => ({
+const useStore = create((set, get) => ({
 
     token: '',
     files: [],
@@ -36,10 +35,16 @@ const useStore = create((set) => ({
                 filter: _filter,
                 sort: '-updated'
             })
-            console.log(data)
-
+            //console.log(data)
             return data
         } catch (err) {
+            if (err.status >= 400) {
+
+                get().setErrorMessage(ERROR_HTTP[400])
+
+            } else {
+                get().setErrorMessage(ERROR_HTTP[err.status] || ERROR_HTTP[0])
+            }
             //console.log(err.status, err.response)
             return { error: true, status: err.status, ...err.response }
         }

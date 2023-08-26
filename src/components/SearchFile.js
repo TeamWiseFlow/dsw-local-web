@@ -150,13 +150,7 @@ const SearchFile = ({ placeholder, keyword, filters, onChange }) => {
 
             (async () => {
                 let res = await getFiles(inputValue, filters)
-                if (res.error) {
-                    if (res.status >= 400) {
-                        setErrorMessage(ERROR_HTTP[400])
-                    } else {
-                        setErrorMessage(ERROR_HTTP[res.status] || ERROR_HTTP[0])
-                    }
-                } else {
+                if (!res.error) {
                     setFiles(res)
                 }
             })();

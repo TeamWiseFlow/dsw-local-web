@@ -29,13 +29,7 @@ const Library = ({ }) => {
     useEffect(() => {
         (async () => {
             let res = await getFiles()
-            if (res.error) {
-                if (res.status >= 400) {
-                    console.log(ERROR_HTTP[400])
-                } else {
-                    console.log(res)
-                }
-            } else {
+            if (!res.error) {
                 setFiles(res)
             }
         })();

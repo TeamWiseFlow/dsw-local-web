@@ -1,22 +1,32 @@
 # DSW Web
 
 ## 0825 dev
+## 0826 dev
 
-启动demo服务端（登录、文件搜索）
+下载pocketbase: https://pocketbase.io/docs/
+
+二进制文件放到PATH路径下，并chmod可执行
+
+启动pocketbase服务器
 
 ```
 npm run server
 ```
 
-启动前端
+启动web端
 ```
-  npm start
+npm start
 ```
-登录 admin/admin
 
-admin@dsw.cn / admin00001111
-user1 / user1000111
+使用管理员账户登录：admin@dsw.cn / admin00001111
 
+
+注意：
+提交代码前，先停止pocketbase服务，避免提交多余文件。
+pb的数据库、migration、文件目前都会提交，方便调试。
+上传的都是0KB文件仅测试。
+
+----
 ## 9.10 milestone 开发
 
 - 后端，用户认证，文件管理/搜索，开发api服务

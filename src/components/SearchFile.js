@@ -3,7 +3,10 @@ import { debounce } from 'lodash'
 import { useState, useEffect, useMemo } from 'react'
 
 import Icons from './Icons'
-import { API_URL_FILE, STYLE_CONFIG } from '../constants'
+import { API_URL_FILE, STYLE_CONFIG, ERROR_HTTP } from '../constants'
+import { SecondaryButton } from './Common'
+
+import { useStore } from '../useStore'
 
 const Container = styled.div`
     display:flex;
@@ -124,11 +127,10 @@ const FileLink = (props) => {
 /**
  * 调用API搜索文件名关键词筛选，支持多选，返回选中的文件列表
  * 
- * 目前假设都是精确匹配文件名中关键词，如服务器端glob实现：root/path/*keyword*.{xlsx,xls}
- * root目录目前服务器指定
+ * 目前假设都是精确匹配文件名中关键词
  * 
  * keyword - 搜索关键词, 匹配文件名部分。*则列出所有文件。
- * filters - 过滤条件，目前支持文件名后缀，在UI中选择。示例：{ 'ext': ['.xlsx', '.xls'] }。（可扩充支持文件大小、文件修改时间等）。（也可扩充keyword支持，如*.xlsx）。
+ * filters - 过滤条件，目前支持文件名后缀，在UI中选择。示例：{ 'ext': ['xlsx', 'xls'] }。（可扩充支持文件大小、文件修改时间等）。（也可扩充keyword支持，如*.xlsx）。
  * onChange - 选择文件变化时的回调函数，返回选中的文件列表。
  * 
  */
@@ -140,20 +142,24 @@ const SearchFile = ({ placeholder, keyword, filters, onChange }) => {
 
     let [inputValue, setInputValue] = useState(keyword || '');
     let [files, setFiles] = useState([]);
+
+    let { getFiles } = useStore()
+
     useEffect(() => {
         if (inputValue) {
-            fetch(API_URL_FILE, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    keyword: inputValue,
-                    filters
-                })
-            }).then(res => res.json()).then(data => {
-                setFiles(data);
-            })
+
+            (async () => {
+                let res = await getFiles(inputValue, filters)
+                if (res.error) {
+                    if (res.status >= 400) {
+                        console.log(ERROR_HTTP[400])
+                    } else {
+                        console.log(res)
+                    }
+                } else {
+                    setFiles(res)
+                }
+            })();
         }
     }, [inputValue])
 
@@ -170,7 +176,7 @@ const SearchFile = ({ placeholder, keyword, filters, onChange }) => {
 
     const handleFileClick = (file) => {
         const updatedFiles = files.map(f => {
-            if (f.name === file.name) {
+            if (f.id === file.id) {
                 return { ...f, selected: !f.selected };
             } else {
                 return f;
@@ -205,16 +211,16 @@ const SearchFile = ({ placeholder, keyword, filters, onChange }) => {
                 {files.length > 0 &&
                     <ResultBar>
                         <ResultHint>点击多选文件</ResultHint>
-                        <ResultAction onClick={selectAll}>全选</ResultAction>
-                        <ResultAction onClick={selectNone}>取消选择</ResultAction>
+                        <SecondaryButton onClick={selectAll}>全选</SecondaryButton>
+                        <SecondaryButton onClick={selectNone}>取消选择</SecondaryButton>
                     </ResultBar>}
                 {files.length > 0 &&
                     <ResultList>
-                        {files.map(file => (
+                        {files.map(f => (
                             <FileLink
-                                key={file.name}
-                                selected={file.selected}
-                                onClick={() => handleFileClick(file)}>{file.name}</FileLink>
+                                key={f.id}
+                                selected={f.selected}
+                                onClick={() => handleFileClick(f)}>{f.filename}</FileLink>
                         ))}
                     </ResultList>}
             </Result>

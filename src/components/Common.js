@@ -15,8 +15,11 @@ export const Button = styled.button`
     }
 `
 
-
-
+export const SecondaryButton = styled(Button)`
+    background-color: #eee;
+    border: 1px solid #ccc;
+    color: black;
+`
 
 export function useComponentVisible(initialIsVisible) {
     const [isComponentVisible, setIsComponentVisible] = useState(initialIsVisible);

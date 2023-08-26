@@ -14,6 +14,8 @@ npm run server
 ```
 登录 admin/admin
 
+admin@dsw.cn / admin00001111
+user1 / user1000111
 
 ## 9.10 milestone 开发
 

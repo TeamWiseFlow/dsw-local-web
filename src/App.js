@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import './App.css'
-// import logo from './logo.svg';
 
 import { Outlet, NavLink, Link, BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
@@ -11,19 +10,15 @@ import Login from './components/Login'
 import Tools from './tools/Tools'
 import SummarizeExcel from './tools/SummarizeExcel'
 import Home from './components/Home'
-import useToken from './components/useToken'
 import Icons from './components/Icons'
 import PageNotFound from './components/PageNotFound'
 
-const Modal = styled.div`
-  width: 500px;
-`
+import { useStore } from './useStore'
 
 const Container = styled.div`
   width:100%;
   height:100%;
   display: flex;
-
 `
 
 const SideBar = styled.div`
@@ -158,9 +153,10 @@ const MENU_ITEMS = [
 ]
 
 function Layout() {
-  const [token, setToken] = useToken()
+  const { token, logout } = useStore()
+
   if (!token) {
-    return <Login setToken={setToken} />
+    return <Login />
   }
   return (
     <Container>
@@ -181,7 +177,7 @@ function Layout() {
           </ul>
         </nav>
         <SideBarFooter>
-          <a onClick={() => setToken("")}>登出</a>
+          <a onClick={logout}>登出</a>
         </SideBarFooter>
       </SideBar>
       <Content>

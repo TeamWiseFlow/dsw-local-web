@@ -7,18 +7,21 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "lodash": "^4.17.21",
+    "pocketbase": "^0.16.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.15.0",
     "react-scripts": "5.0.1",
     "styled-components": "^6.0.7",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zustand": "^4.4.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "server": "ROOT_DIR='./test/excels' node src/example-server.js",
+    "server-demo": "ROOT_DIR='./test/excels' node src/example-server.js",
+    "server": "cd server && pocketbase serve",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

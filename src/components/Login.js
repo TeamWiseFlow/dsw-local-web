@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 import React, { useState } from 'react'
-import { API_URL_LOGIN, ERROR_LOGIN_EMPTY } from '../constants'
+import { ERROR_LOGIN } from '../constants'
 import { Button } from './Common'
+import { useStore } from '../useStore'
 
 const Container = styled.div`
     display: flex;
@@ -47,36 +48,25 @@ const Error = styled.div`
     font-size: 14px;
 `
 
-async function loginUser(credentials) {
-    return fetch(API_URL_LOGIN, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(credentials)
-    })
-        .then(data => data.json())
-}
-
-export default function Login({ setToken }) {
+export default function Login() {
     const [username, setUserName] = useState()
     const [password, setPassword] = useState()
     const [error, setError] = useState()
+
+    const { token, login } = useStore()
 
     const handleSubmit = async e => {
         e.preventDefault()
 
         if (!username || !password) {
-            setError(ERROR_LOGIN_EMPTY)
+            setError(ERROR_LOGIN['empty'])
             return
         }
 
-        const res = await loginUser({ username, password })
+        const res = await login({ username, password })
         if (res.error) {
-            setError(res.error)
+            setError(ERROR_LOGIN[res.code] || `未知错误(${res.code})`)
             return
-        } else if (res.token) {
-            setToken(res.token)
         }
     }
 

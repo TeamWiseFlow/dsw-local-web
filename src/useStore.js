@@ -35,7 +35,7 @@ const useStore = create((set, get) => ({
                 filter: _filter,
                 sort: '-updated'
             })
-            //console.log(data)
+            console.log(data)
             return data
         } catch (err) {
             if (err.status >= 400) {

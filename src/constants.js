@@ -3,6 +3,19 @@ export const API_URL_BASE = 'http://localhost:8090'
 export const API_URL_LOGIN = API_URL_BASE + '/login'
 export const API_URL_FILE = API_URL_BASE + '/api/files/documents/'
 
+// file extensions
+export const FILE_EXT = {
+    'xls': 'Excel',
+    'xlsx': 'Excel',
+    'doc': 'Word',
+    'docx': 'Word',
+    'pdf': 'Pdf',
+    'ppt': 'Ppt',
+    'pptx': 'Ppt',
+    'txt': 'Txt',
+    'csv': 'Csv',
+}
+
 // error messages
 export const ERROR_LOGIN = {
     'empty': '用户名或密码不能为空',

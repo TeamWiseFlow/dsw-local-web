@@ -6,7 +6,9 @@ import { ReactComponent as Home } from '../assets/home.svg';
 import { ReactComponent as Apps } from '../assets/apps.svg';
 import { ReactComponent as Library } from '../assets/library.svg';
 import { ReactComponent as Chat } from '../assets/chat.svg';
+import { ReactComponent as File } from '../assets/file.svg';
+import { ReactComponent as Word } from '../assets/word.svg';
 
 export default {
-    Excel, Find, Gear, Graph, Home, Apps, Library, Chat
+    Excel, Find, Gear, Graph, Home, Apps, Library, Chat, File, Word
 };

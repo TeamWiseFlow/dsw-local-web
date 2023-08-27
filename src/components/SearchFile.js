@@ -37,8 +37,8 @@ const FileIcon = styled.div`
     }
 
     & svg {
-        width: 30px;
-        height: 30px;
+        width: 24px;
+        height: 24px;
     }
 
     display: flex;
@@ -105,6 +105,7 @@ const ResultList = styled.div`
 const FileLinkContainer = styled.div`
     display:flex;
     align-items:center;
+    padding: 10px 20px;
     gap: 10px;
     border-radius: 5px;
     background-color: ${props => props.selected ? '#e3eaff' : 'transparent'};   

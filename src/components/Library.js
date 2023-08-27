@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { debounce } from 'lodash'
-import { createElement, useState, useEffect, useMemo } from 'react'
+import { debounce, set } from 'lodash'
+import { createElement, useState, useEffect, useMemo, useRef } from 'react'
 import Icons from './Icons'
 import { useStore } from '../useStore'
 import { API_URL_FILE, FILE_EXT } from '../constants'
@@ -53,15 +53,15 @@ const FileList = styled.div`
 
 `
 
-const FileLink = styled.a`
+const FileLink = styled.div`
     display: flex;
     gap: 10px;
     align-items: center;
-    text-decoration: none;
-    color: #111;
+    
+    
     border-radius: 5px;
     border: 1px solid #eee;
-    padding: 10px 20px;
+    padding: 15px 20px;
     width: 100%;
     background-color: #fff;
 
@@ -69,29 +69,14 @@ const FileLink = styled.a`
         background-color: #fafafa;
     }
 `
-const Icon = styled.div`
-    & path {
-        fill: #eee;
-    }
-
-    & svg {
-        width: 30px;
-        height: 30px;
-    }
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`
 
 const FileIcon = styled.div`
     & path {
       
     }
-
     & svg {
-        width: 30px;
-        height: 30px;
+        width: 24px;
+        height: 24px;
     }
 
     display: flex;
@@ -99,21 +84,86 @@ const FileIcon = styled.div`
     align-items: center;
 `
 
+const FileName = styled.a`
+    margin-right: auto;
+    text-decoration: none;
+    color: #111;
+`
+
+const FileAction = styled.div`
+    font-size: 0.8rem;
+    cursor: pointer;
+    color: ${props => props.$warning && '#bc0d04' || '#666'};
+
+    &:hover {
+        text-decoration: underline;
+    }
+`
+
+const UploadButton = ({ accept, onSelectFiles }) => {
+    const ref = useRef(null)
+
+    const onChange = (e) => {
+        e.preventDefault()
+
+        let files = e.target.files
+
+        onSelectFiles(files)
+    }
+
+    const onClick = (e) => {
+        e.target.value = null
+    }
+
+    return (
+        <>
+            <Button onClick={() => ref.current.click()}>上传文件</Button>
+            <input
+                type="file"
+                accept={accept}
+                ref={ref}
+                hidden
+                onChange={onChange}
+                onClick={onClick} />
+        </>
+    )
+}
+
 const Library = ({ }) => {
-    const { getFiles } = useStore()
+    const { getFiles, uploadFile, deleteFile } = useStore()
     const [files, setFiles] = useState([])
+    const [deleting, setDeleting] = useState('')
 
     useEffect(() => {
         (async () => {
             let res = await getFiles()
-            if (!res.error) {
+            if (res && !res.error) {
                 setFiles(res)
             }
         })();
     }, [])
 
-    useEffect(() => {
-    }, [files])
+    // useEffect(() => {
+    // }, [files])
+
+    const onSelectFiles = async (selectedFiles) => {
+        //        console.log(files)
+        let res = await uploadFile(selectedFiles[0])
+        if (res && !res.error) {
+            setFiles([res, ...files])
+        }
+    }
+
+    const onBeginDeleteFile = (id) => {
+        setDeleting(id)
+    }
+
+    const onDeleteFile = async (id) => {
+        let res = await deleteFile(id)
+        if (!res) {
+            setFiles(files.filter(f => f.id != id))
+        }
+    }
 
     return (
         <Container>
@@ -121,18 +171,24 @@ const Library = ({ }) => {
                 <h1>财政图书馆</h1>
             </Header>
             <Content>
-                <Button>上传文件</Button>
+                <UploadButton accept={Object.keys(FILE_EXT).map(k => '.' + k).join(',')} onSelectFiles={onSelectFiles} />
                 <FileListContainer>
                     <h3>已上传文件</h3>
                     <FileList>
                         {
                             files.map(f => (
-                                <FileLink
-                                    key={f.id}
-                                    href={API_URL_FILE + `${f.id}/${f.file}`}
-                                    target="_blank">
+                                <FileLink key={f.id}>
                                     <FileIcon>{createElement(Icons[FILE_EXT[f.file.split('.').pop()] || 'File'])}</FileIcon>
-                                    {f.filename}
+                                    <FileName href={API_URL_FILE + `${f.id}/${f.file}`} target="_blank">{f.filename}</FileName>
+                                    {deleting != f.id && <FileAction onClick={() => onBeginDeleteFile(f.id)}>删除</FileAction>}
+
+                                    {
+                                        deleting == f.id &&
+                                        <>
+                                            <FileAction onClick={() => onDeleteFile(f.id)} $warning>确认</FileAction>
+                                            <FileAction onClick={() => setDeleting('')}>取消</FileAction>
+                                        </>
+                                    }
                                 </FileLink>
                             ))
                         }

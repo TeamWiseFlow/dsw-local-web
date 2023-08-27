@@ -35,17 +35,55 @@ const useStore = create((set, get) => ({
                 filter: _filter,
                 sort: '-updated'
             })
-            console.log(data)
+            // console.log(data)
             return data
         } catch (err) {
-            if (err.status >= 400) {
-
-                get().setErrorMessage(ERROR_HTTP[400])
-
+            if (err.isAbort) return
+            console.log(err.status, err.response, err.isAbort)
+            get().setErrorMessage(ERROR_HTTP[err.status] || ERROR_HTTP[0])
+            return { error: true, status: err.status, ...err.response }
+        }
+    },
+    uploadFile: async (file) => {
+        const formData = new FormData()
+        formData.append('file', file)
+        formData.append('filename', file.name)
+        try {
+            // 如果依赖数据库index unique约束filename，会正常报错，不会新建记录，但文件仍然会传到storage目录，污染目录下文件。
+            // 因此手动检查同名文件是否已存在，如果存在直接报错。
+            const res = await pb.collection('documents').getFullList({
+                filter: `filename = "${file.name}"`
+            })
+            let exists = res.find(f => f.filename == file.name)
+            if (exists) {
+                console.log('file exists')
+                throw { response: { data: { file: { code: 'validation_not_unique' } } } }
+            }
+            const createdRecord = await pb.collection('documents').create(formData)
+            return createdRecord
+        } catch (err) {
+            if (err.isAbort) return
+            // console.log(JSON.stringify(err, null, 2))
+            if (err.response.data && err.response.data.file && err.response.data.file.code == 'validation_not_unique') {
+                get().setErrorMessage(ERROR_HTTP[err.response.data.file.code] || err.response.data.file.message)
             } else {
                 get().setErrorMessage(ERROR_HTTP[err.status] || ERROR_HTTP[0])
             }
-            //console.log(err.status, err.response)
+            return { error: true, status: err.status, ...err.response }
+        }
+    },
+    deleteFile: async (id) => {
+        try {
+            // await pb.collection('documents').update(id, {'file':null})
+            await pb.collection('documents').delete(id)
+        } catch (err) {
+            if (err.isAbort) return
+            // console.log(JSON.stringify(err, null, 2))
+            if (err.response.data && err.response.data.file && err.response.data.file.code) {
+                get().setErrorMessage(ERROR_HTTP[err.response.data.file.code] || err.response.data.file.message)
+            } else {
+                get().setErrorMessage(ERROR_HTTP[err.status] || ERROR_HTTP[0])
+            }
             return { error: true, status: err.status, ...err.response }
         }
     },

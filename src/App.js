@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import './App.css'
 

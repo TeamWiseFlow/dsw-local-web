@@ -89,6 +89,10 @@ const FileName = styled.a`
     text-decoration: none;
     color: #111;
 `
+const FileTime = styled.span`
+    font-size: 0.8rem;
+    color: #666;
+`
 
 const FileAction = styled.div`
     font-size: 0.8rem;
@@ -150,6 +154,7 @@ const Library = ({ }) => {
         //        console.log(files)
         let res = await uploadFile(selectedFiles[0])
         if (res && !res.error) {
+            // console.log('uploaded file', res)
             setFiles([res, ...files])
         }
     }
@@ -180,6 +185,8 @@ const Library = ({ }) => {
                                 <FileLink key={f.id}>
                                     <FileIcon>{createElement(Icons[FILE_EXT[f.file.split('.').pop()] || 'File'])}</FileIcon>
                                     <FileName href={API_URL_FILE + `${f.id}/${f.file}`} target="_blank">{f.filename}</FileName>
+                                    <FileTime>{new Date(f.created).toLocaleString()}</FileTime>
+                                    |
                                     {deleting != f.id && <FileAction onClick={() => onBeginDeleteFile(f.id)}>删除</FileAction>}
 
                                     {

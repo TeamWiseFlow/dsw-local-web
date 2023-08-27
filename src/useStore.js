@@ -78,7 +78,7 @@ const useStore = create((set, get) => ({
             await pb.collection('documents').delete(id)
         } catch (err) {
             if (err.isAbort) return
-            // console.log(JSON.stringify(err, null, 2))
+            console.log(JSON.stringify(err, null, 2))
             if (err.response.data && err.response.data.file && err.response.data.file.code) {
                 get().setErrorMessage(ERROR_HTTP[err.response.data.file.code] || err.response.data.file.message)
             } else {

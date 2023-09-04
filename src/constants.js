@@ -1,6 +1,6 @@
 // api end points
-// export const API_URL_BASE = 'http://localhost:8090'
-export const API_URL_BASE = 'http://47.98.147.178:8090'
+export const API_URL_BASE = 'http://localhost:8090'
+// export const API_URL_BASE = 'http://47.98.147.178:8090'
 export const API_URL_LOGIN = API_URL_BASE + '/login'
 export const API_URL_FILE = API_URL_BASE + '/api/files/documents/'
 

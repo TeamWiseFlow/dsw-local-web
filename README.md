@@ -49,3 +49,48 @@ pb的数据库、migration、文件目前都会提交，方便调试。
 
  - 财政GPT功能：尝试利用chatgpt前端模版
  - 如财政小助手也可用聊天交互方式，也可以用以上模版（用不同插件区别？）
+
+
+
+## 部署
+1、拉代码
+git clone git@openi.pcl.ac.cn:DigitalSocialWorker/dsw-web.git
+
+2、安装前端环境
+
+2.1 安装node
+wget https://nodejs.org/dist/v16.10.0/node-v16.10.0-linux-x64.tar.xz
+
+tar xvf node-v16.10.0-linux-x64.tar.xz
+
+ln -s /root/node-v16.10.0-linux-x64/bin/node /usr/local/bin/node
+
+ln -s /root/node-v16.10.0-linux-x64/bin/npm /usr/local/bin/npm
+
+3、拉pocketbase服务
+wget https://github.com/pocketbase/pocketbase/releases/download/v0.17.7/pocketbase_0.17.
+7_linux_amd64.zip
+
+4、把pocketbase 压缩包放到/usr/local/bin目录下并解压
+mv -vf pocketbase_0.17.7_linux_amd64.zip /usr/local/bin
+cd /usr/local/bin
+unzip pocketbase_0.17.7_linux_amd64.zip
+
+5、启动项目
+cd ~/dsw-web
+
+5.1 把server移动到 /mnt目录下
+mv -vf server /mnt
+
+5.2 启动web
+npm install
+npm run start
+
+5.3 启动server
+cd /mnt/server & pocketbase serve
+
+
+## 其他指令
+
+查看端口进程：lsof -i :3000
+杀死端口进程：kill -9 {id}

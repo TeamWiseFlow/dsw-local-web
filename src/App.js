@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import styled, { keyframes } from 'styled-components'
 import './App.css'
 
-import { Outlet, NavLink, Link, BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Outlet, NavLink, BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import ErrorPage from './components/ErrorPage'
-import SearchFile from './components/SearchFile'
+// import SearchFile from './components/SearchFile'
 import Login from './components/Login'
 import Tools from './tools/Tools'
 import SummarizeExcel from './tools/SummarizeExcel'
@@ -181,6 +181,7 @@ const MENU_ITEMS = [
 
 function Layout() {
   const { logout, errorMessage } = useStore()
+  window.document.title = '绍兴财政局智慧系统'
 
   if (!pb.authStore.token) {
     return <Login />

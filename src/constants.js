@@ -1,6 +1,10 @@
 // api paths
 export const API_PATH_FILE = '/api/files/documents/'
 
+
+// file paths
+export const FILE_PATH = '/mnt/server/pb_data/storage'
+
 // file extensions
 export const FILE_EXT = {
     'xls': 'Excel',

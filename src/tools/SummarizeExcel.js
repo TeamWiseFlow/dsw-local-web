@@ -4,6 +4,7 @@ import { Button } from '../components/Common'
 import Icons from '../components/Icons'
 import SearchFile from '../components/SearchFile'
 import { useComponentVisible } from '../components/Common'
+import { collection } from '../service/collection'
 
 const Container = styled.div`
     overflow-y: scroll;
@@ -96,16 +97,17 @@ export default function SummarzieExcel() {
         }
     }
 
-    const run = () => {
+    const run = async () => {
         setLoading(true)
-        
+        console.log('files', files)
+        const res = await collection(files)
+        console.log('res', res)
         // TODO: call api
-        setTimeout(() => {
-            setLoading(false)
-            setResultFile("result.xlsx")
-        }, 2000);
-
-
+        // setTimeout(() => {
+        //     setLoading(false)
+        //     setResultFile("result.xlsx")
+        // }, 2000);
+        alert('统计成功')
     }
 
     return (

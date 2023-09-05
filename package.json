@@ -19,6 +19,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "tar": "tar -cvf ./deploy.tar --exclude='*.map' ./captain-definition ./build/*",
+    "deploy": "caprover deploy -t ./deploy.tar",
     "test": "react-scripts test",
     "server-demo": "ROOT_DIR='./test/excels' node src/example-server.js",
     "server": "cd server && pocketbase serve",

@@ -1,5 +1,41 @@
 # DSW Web
 
+## 0905 deployment
+
+部署:
+```
+npm run build
+npm run tar
+npm run deploy
+```
+
+以上第三步需要caprover cli。
+
+也可不安装cli，登录caprover后台网页，找到dsw-web应用，在depoyment标签页里，上传deploy.tar即可。
+
+caprover后台：
+```
+http://47.98.147.178:3000/
+```
+密码: dsw2024admin
+
+dsw-web应用，就是简单的一个docker image，包括了nginx的静态网站配置。
+
+使用cli:
+安装配置CLI： https://caprover.com/docs/get-started.html
+
+```
+caprover login
+```
+地址需要输入：http://captain.dswsx.io2xp.cn
+密码如上
+
+
+dsw-web网站, http://47.98.147.178:3001 
+
+pocketbase使用systemd部署成服务, http://47.98.147.178:8090/_/
+
+
 ## 0825 dev
 ## 0826 dev
 

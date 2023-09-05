@@ -3,7 +3,7 @@ import { debounce } from 'lodash'
 import { useState, useEffect, useMemo } from 'react'
 
 import Icons from './Icons'
-import { API_URL_FILE, STYLE_CONFIG, ERROR_HTTP } from '../constants'
+import { STYLE_CONFIG, ERROR_HTTP } from '../constants'
 import { SecondaryButton } from './Common'
 
 import { useStore } from '../useStore'

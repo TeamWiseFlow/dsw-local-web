@@ -3,7 +3,7 @@ import { debounce, set } from 'lodash'
 import { createElement, useState, useEffect, useMemo, useRef } from 'react'
 import Icons from './Icons'
 import { useStore } from '../useStore'
-import { API_URL_FILE, FILE_EXT } from '../constants'
+import { API_PATH_FILE, FILE_EXT } from '../constants'
 import { Button } from './Common'
 
 const Container = styled.div`
@@ -184,7 +184,7 @@ const Library = ({ }) => {
                             files.map(f => (
                                 <FileLink key={f.id}>
                                     <FileIcon>{createElement(Icons[FILE_EXT[f.file.split('.').pop()] || 'File'])}</FileIcon>
-                                    <FileName href={API_URL_FILE + `${f.id}/${f.file}`} target="_blank">{f.filename}</FileName>
+                                    <FileName href={process.env.REACT_APP_API_URL_BASE + API_PATH_FILE + `${f.id}/${f.file}`} target="_blank">{f.filename}</FileName>
                                     <FileTime>{new Date(f.created).toLocaleString()}</FileTime>
                                     |
                                     {deleting != f.id && <FileAction onClick={() => onBeginDeleteFile(f.id)}>删除</FileAction>}

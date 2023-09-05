@@ -1,8 +1,8 @@
 import { create } from 'zustand'
 import PocketBase from 'pocketbase'
-import { API_URL_BASE, ERROR_LOGIN, ERROR_HTTP } from './constants'
-const pb = new PocketBase(API_URL_BASE)
-console.log('init pocketbase')
+import { ERROR_LOGIN, ERROR_HTTP } from './constants'
+const pb = new PocketBase(process.env.REACT_APP_API_URL_BASE)
+console.log('init pocketbase @', process.env.REACT_APP_API_URL_BASE, process.env.NODE_ENV)
 // pocketbase
 const useStore = create((set, get) => ({
 

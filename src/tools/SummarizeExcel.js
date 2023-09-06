@@ -5,6 +5,7 @@ import Icons from '../components/Icons'
 import SearchFile from '../components/SearchFile'
 import { useComponentVisible } from '../components/Common'
 import { collection } from '../service/collection'
+import { useStore } from '../useStore'
 
 const Container = styled.div`
     overflow-y: scroll;
@@ -78,7 +79,7 @@ const Loading = styled.div`
 `
 
 export default function SummarzieExcel() {
-
+    const { setErrorMessage } = useStore()
     let [files, setFiles] = useState([])
     let [resultFile, setResultFile] = useState("")
     let [loading, setLoading] = useState(false)
@@ -101,13 +102,23 @@ export default function SummarzieExcel() {
         setLoading(true)
         console.log('files', files)
         const res = await collection(files)
+        const { flag, result } = res
+        if (flag === 0) {
+            setResultFile(result)
+        } else if (flag === 1) {
+            setErrorMessage('输入的文件路径不对')
+        } else if (flag === 2) {
+            setErrorMessage('计算错误')
+        }
         console.log('res', res)
+        setLoading(false)
+
+
         // TODO: call api
         // setTimeout(() => {
         //     setLoading(false)
         //     setResultFile("result.xlsx")
         // }, 2000);
-        alert('统计成功')
     }
 
     return (
@@ -139,7 +150,7 @@ export default function SummarzieExcel() {
                 </Result>
                 {isComponentVisible &&
                     <Modal ref={ref}>
-                        <SearchFile onChange={selectFiles} />
+                        <SearchFile setVisible={setIsComponentVisible} onChange={selectFiles} />
                     </Modal>
                 }
             </Content>

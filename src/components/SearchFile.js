@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react'
 
 import Icons from './Icons'
 import { STYLE_CONFIG, ERROR_HTTP } from '../constants'
-import { SecondaryButton } from './Common'
+import { SecondaryButton, Button } from './Common'
 
 import { useStore } from '../useStore'
 
@@ -135,7 +135,7 @@ const FileLink = (props) => {
  * onChange - 选择文件变化时的回调函数，返回选中的文件列表。
  * 
  */
-const SearchFile = ({ placeholder, keyword, filters, onChange }) => {
+const SearchFile = ({ setVisible, placeholder, keyword, filters, onChange }) => {
 
     filters = filters || {
         'ext': ['xlsx', 'xls'],
@@ -190,6 +190,10 @@ const SearchFile = ({ placeholder, keyword, filters, onChange }) => {
         setFiles(updatedFiles);
     }
 
+    const selectOk = () => {
+        setVisible(false)
+    }
+
     useEffect(() => {
         onChange(files.filter(f => f.selected));
     }, [files])
@@ -208,6 +212,7 @@ const SearchFile = ({ placeholder, keyword, filters, onChange }) => {
                         <ResultHint>点击多选文件</ResultHint>
                         <SecondaryButton onClick={selectAll}>全选</SecondaryButton>
                         <SecondaryButton onClick={selectNone}>取消选择</SecondaryButton>
+                        {files.find(f => f.selected) && <Button onClick={selectOk}>确定</Button>}
                     </ResultBar>}
                 {files.length > 0 &&
                     <ResultList>

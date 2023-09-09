@@ -156,21 +156,22 @@ const ErrorBar = styled.div`
 `
 
 const MENU_ITEMS = [
+  // {
+  //   to: '/',
+  //   title: '首页',
+  //   icon: Icons.Home
+  // },
   {
-    to: '/',
-    title: '首页',
-    icon: Icons.Home
+    to: '/library',
+    title: '财政图书馆',
+    icon: Icons.Library,
   },
   {
     to: '/tools',
     title: '财政助手',
     icon: Icons.Apps
   },
-  {
-    to: '/library',
-    title: '财政图书馆',
-    icon: Icons.Library,
-  },
+
   {
     to: '/gpt',
     title: '财政GPT',

@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { ERROR_LOGIN } from '../constants'
 import { Button } from './Common'
 import { useStore } from '../useStore'
+import { useNavigate } from 'react-router-dom'
 
 const Container = styled.div`
     display: flex;
@@ -52,7 +53,7 @@ export default function Login() {
     const [username, setUserName] = useState()
     const [password, setPassword] = useState()
     const [error, setError] = useState()
-
+    const navigate = useNavigate()
     const { token, login } = useStore()
 
     const handleSubmit = async e => {
@@ -67,6 +68,8 @@ export default function Login() {
         if (res.error) {
             setError(ERROR_LOGIN[res.code || res.status] || `未知错误(${res.code || res.status})`)
             return
+        } else {
+            navigate('/library')
         }
     }
 

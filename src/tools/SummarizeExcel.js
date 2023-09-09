@@ -78,90 +78,97 @@ const Loading = styled.div`
 `;
 
 export default function SummarzieExcel() {
-  const { setErrorMessage } = useStore();
-  let [files, setFiles] = useState([]);
-  let [resultFile, setResultFile] = useState("");
-  let [loading, setLoading] = useState(false);
+    const { setErrorMessage } = useStore();
+    let [files, setFiles] = useState([]);
+    let [resultFile, setResultFile] = useState("");
+    let [loading, setLoading] = useState(false);
 
-  const { ref, isComponentVisible, setIsComponentVisible } =
-    useComponentVisible(false);
+    const { ref, isComponentVisible, setIsComponentVisible } =
+        useComponentVisible(false);
 
-  const openSearch = () => {
-    setIsComponentVisible(true);
-  };
+    const openSearch = () => {
+        setIsComponentVisible(true);
+    };
 
-  const selectFiles = (files) => {
-    if (!files || files.length == 0) {
-      setFiles([]);
-    } else {
-      setFiles(files);
-    }
-  };
+    const selectFiles = (files) => {
+        if (!files || files.length == 0) {
+            setFiles([]);
+        } else {
+            setFiles(files);
+        }
+    };
 
-  const run = async () => {
-    setLoading(true);
-    console.log("files", files);
-    const res = await collection(files);
-    const { flag, result } = res;
-    if (flag === 0) {
-      setResultFile(`${process.env.REACT_APP_RESULT_URL}${result}`);
-    } else if (flag === 1) {
-      setErrorMessage("输入的文件路径不对");
-    } else if (flag === 2) {
-      setErrorMessage("计算错误");
-    }
-    console.log("res", res);
-    setLoading(false);
+    const run = async () => {
+        setLoading(true);
+        console.log("files", files);
+        const res = await collection(files);
+        const { flag, result } = res;
+        if (flag === 0) {
+            setResultFile(`${process.env.REACT_APP_RESULT_URL}${result}`);
+        } else if (flag === 1) {
+            setErrorMessage("输入的文件路径不对");
+        } else if (flag === 2) {
+            setErrorMessage("计算错误");
+        }
+        console.log("res", res);
+        setLoading(false);
 
-    // TODO: call api
-    // setTimeout(() => {
-    //     setLoading(false)
-    //     setResultFile("result.xlsx")
-    // }, 2000);
-  };
+        // TODO: call api
+        // setTimeout(() => {
+        //     setLoading(false)
+        //     setResultFile("result.xlsx")
+        // }, 2000);
+    };
 
-  return (
-    <Container>
-      <Header>
-        <h1>集采统计工具</h1>
-      </Header>
-      <Content>
-        <Button onClick={openSearch}>
-          {files.length == 0 ? "选择文件" : "重新选择"}
-        </Button>
-        <SelectResult>
-          {files.length > 0
-            ? `已选择${files.length}个文件`
-            : `请选择参与统计的文件`}
-        </SelectResult>
+    console.log('files', files)
+    return (
+        <Container>
+            <Header>
+                <h1>集采统计工具</h1>
+            </Header>
+            <Content>
+                <Button style={{ cursor: 'pointer' }} onClick={openSearch}>
+                    {files.length == 0 ? "选择文件" : "重新选择"}
+                </Button>
+                {files.length > 0 ? <SelectResult>
+                    {files.length > 0
+                        ? <div>
+                            <div>{`已选择${files.length}个文件`}</div>
+                            <ul>
+                                {files.map(f => <li>{f.filename}</li>)}
+                            </ul>
+                        </div>
+                        : `请选择参与统计的文件`}
+                </SelectResult> : <div style={{ padding: '20px 0' }}></div>
+                }
 
-        {(loading && <Loading>・・・</Loading>) || (
-          <Button disabled={files.length == 0} onClick={run}>
-            开始汇总
-          </Button>
-        )}
-        <Result>
-          {resultFile && (
-            <>
-              <h2>汇总结果</h2>
-              <hr></hr>
+                {(loading && <Loading>・・・</Loading>) || (
+                    <Button style={{ cursor: 'pointer' }} disabled={files.length == 0} onClick={run}>
+                        开始汇总
+                    </Button>
+                )}
+                <Result>
+                    {resultFile && (
+                        <>
+                            <h2>汇总结果</h2>
+                            <hr></hr>
 
-              <Link href={resultFile} target="_blank">
-                <Icons.Excel />
-                下载结果文件
-              </Link>
-            </>
-          )}
-        </Result>
-        {isComponentVisible && (
-          <Modal ref={ref}>
-            <SearchFile
-              setVisible={setIsComponentVisible}
-              onChange={selectFiles}
-            />
-          </Modal>
-        )}
-      </Content>
-    </Container>
-  );
+                            <Link href={resultFile} target="_blank">
+                                <Icons.Excel />
+                                下载结果文件
+                            </Link>
+                        </>
+                    )}
+                </Result>
+                {isComponentVisible && (
+                    <Modal ref={ref}>
+                        <SearchFile
+                            setVisible={setIsComponentVisible}
+                            onChange={selectFiles}
+                        />
+                    </Modal>
+                )}
+            </Content>
+        </Container>
+    );
 }

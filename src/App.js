@@ -189,7 +189,7 @@ function Layout() {
   return (
     <Container>
       <SideBar>
-        <SideBarHeader>欢迎回来，{pb.authStore.model.username}</SideBarHeader>
+        <SideBarHeader>欢迎回来，{pb?.authStore?.model?.email || ''}</SideBarHeader>
         <nav>
           <ul>
             {

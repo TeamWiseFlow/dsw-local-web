@@ -19,6 +19,7 @@ export const SecondaryButton = styled(Button)`
     background-color: #eee;
     border: 1px solid #ccc;
     color: black;
+    cursor: pointer
 `
 
 export function useComponentVisible(initialIsVisible) {

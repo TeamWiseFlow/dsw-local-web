@@ -219,7 +219,7 @@ const SearchFile = ({
             <SecondaryButton onClick={selectAll}>全选</SecondaryButton>
             <SecondaryButton onClick={selectNone}>取消选择</SecondaryButton>
             {files.find((f) => f.selected) && (
-              <Button onClick={selectOk}>确定</Button>
+              <Button style={{ cursor: 'pointer' }} onClick={selectOk}>确定</Button>
             )}
           </ResultBar>
         )}

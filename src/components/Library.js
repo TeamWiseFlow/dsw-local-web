@@ -121,7 +121,7 @@ const UploadButton = ({ accept, onSelectFiles }) => {
 
     return (
         <>
-            <Button onClick={() => ref.current.click()}>上传文件</Button>
+            <Button style={{ cursor: 'pointer' }} onClick={() => ref.current.click()}>上传文件</Button>
             <input
                 type="file"
                 accept={accept}

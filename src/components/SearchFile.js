@@ -134,6 +134,7 @@ const FileLink = (props) => {
  *
  */
 const SearchFile = ({
+  max,
   setVisible,
   placeholder,
   keyword,
@@ -175,6 +176,9 @@ const SearchFile = ({
       if (f.id === file.id) {
         return { ...f, selected: !f.selected };
       } else {
+        if (max === 1) {
+          f.selected = false
+        }
         return f;
       }
     });
@@ -206,7 +210,7 @@ const SearchFile = ({
           <Icons.Find />
         </Icon>
         <Input
-          placeholder={placeholder || "查找文件,输入*列出所有文件"}
+          placeholder={placeholder || "查找文件"}
           onChange={debouncedChangeHandler}
         />
       </Bar>
@@ -215,8 +219,8 @@ const SearchFile = ({
       <Result>
         {files.length > 0 && (
           <ResultBar>
-            <ResultHint>点击多选文件</ResultHint>
-            <SecondaryButton onClick={selectAll}>全选</SecondaryButton>
+            <ResultHint>{max === 1 ? '点击选择文件' : '点击多选文件'}</ResultHint>
+            {max !== 1 && <SecondaryButton onClick={selectAll}>全选</SecondaryButton>}
             <SecondaryButton onClick={selectNone}>取消选择</SecondaryButton>
             {files.find((f) => f.selected) && (
               <Button style={{ cursor: 'pointer' }} onClick={selectOk}>确定</Button>

@@ -9,6 +9,7 @@ import ErrorPage from './components/ErrorPage'
 import Login from './components/Login'
 import Tools from './tools/Tools'
 import SummarizeExcel from './tools/SummarizeExcel'
+import NewSummarizeExcel from './tools/NewSummarizeExcel'
 import Home from './components/Home'
 import Library from './components/Library'
 import Icons from './components/Icons'
@@ -225,6 +226,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="tools" element={<Tools />} />
           <Route path="tools/sum" element={<SummarizeExcel />} />
+          <Route path='tools/newsum' element={<NewSummarizeExcel />}></Route>
           <Route path="library" element={<Library />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>

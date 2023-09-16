@@ -89,6 +89,16 @@ const ICONS = [
         updated: '2023-08-01'
     },
     {
+        to: '/tools/newsum',
+        disabled: false,
+        color: '#d3adf7',
+        icon: Icons.Excel,
+        title: '新集采统计',
+        desc: '单预算文件汇总统计',
+        version: '1.0.0',
+        updated: '2023-09-10'
+    },
+    {
         to: '/tools/alert',
         disabled: true,
         color: '#78d48e',
@@ -121,7 +131,7 @@ export default function Tools() {
                 {
                     ICONS.map(ico => (
                         <li key={ico.title}>
-                            <IconLink to={`/tools/sum`} color={ico.color} disabled={ico.disabled}>
+                            <IconLink to={ico.to} color={ico.color} disabled={ico.disabled}>
                                 <ico.icon></ico.icon>
                                 <IconTitle>{ico.title}</IconTitle>
                                 <IconDesc>{ico.desc}</IconDesc>

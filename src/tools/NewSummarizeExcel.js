@@ -100,7 +100,7 @@ export default function SummarzieExcel() {
 
     const run = async () => {
         setLoading(true);
-        const res = await collection(files);
+        const res = await collection(files, 'new');
         const { flag, result } = res;
         if (flag === 0) {
             setResultFile(`${process.env.REACT_APP_RESULT_URL}${result}`);

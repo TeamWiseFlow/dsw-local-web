@@ -5,11 +5,14 @@ import { FILE_PATH } from '../constants'
 // Example POST method implementation:
 const colectionUrl = 'http://47.98.147.178:7777/budget_analysis'
 
-export async function collection(data) {
+const newColectionUrl = 'http://47.98.147.178:7777/new_budget_analysis'
+
+export async function collection(data, type) {
+
     // Default options are marked with *
     const paths = data?.map(i => `${FILE_PATH}/${i.collectionId}/${i.id}/${i.file}`)
     console.log('paths', paths)
-    const response = await fetch(colectionUrl, {
+    const response = await fetch(type === 'new' ? newColectionUrl : colectionUrl, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         // mode: "no-cors", // no-cors, *cors, same-origin
         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached

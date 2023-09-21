@@ -1,38 +1,38 @@
-import React from 'react'
-import styled, { keyframes } from 'styled-components'
-import './App.css'
+import React from "react";
+import styled, { keyframes } from "styled-components";
+import "./App.css";
 
-import { Outlet, NavLink, BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Outlet, NavLink, BrowserRouter, Routes, Route } from "react-router-dom";
 
-import ErrorPage from './components/ErrorPage'
+import ErrorPage from "./components/ErrorPage";
 // import SearchFile from './components/SearchFile'
-import Login from './components/Login'
-import Tools from './tools/Tools'
-import SummarizeExcel from './tools/SummarizeExcel'
-import NewSummarizeExcel from './tools/NewSummarizeExcel'
-import Home from './components/Home'
-import Library from './components/Library'
-import Icons from './components/Icons'
-import PageNotFound from './components/PageNotFound'
+import Login from "./components/Login";
+import Tools from "./tools/Tools";
+import SummarizeExcel from "./tools/SummarizeExcel";
+import NewSummarizeExcel from "./tools/NewSummarizeExcel";
+import Home from "./components/Home";
+import Library from "./components/Library";
+import Icons from "./components/Icons";
+import PageNotFound from "./components/PageNotFound";
 
-import { pb, useStore } from './useStore'
+import { pb, useStore } from "./useStore";
 
 const Container = styled.div`
-  width:100%;
-  height:100%;
+  width: 100%;
+  height: 100%;
   display: flex;
-`
+`;
 
 const SideBar = styled.div`
   width: 200px;
-  height:100%;
-  display:  flex;
+  height: 100%;
+  display: flex;
   flex-direction: column;
   background-color: #f7f7f7;
   border-right: 1px solid #ccc;
 
   & nav {
-    flex:  1;
+    flex: 1;
     overflow-y: scroll;
     padding: 20px;
 
@@ -41,7 +41,7 @@ const SideBar = styled.div`
       margin: 0;
       padding: 0;
 
-      & li a:hover  {
+      & li a:hover {
         background-color: #ebeef7;
         border-radius: 10px;
       }
@@ -64,7 +64,7 @@ const SideBar = styled.div`
       }
     }
   }
-`
+`;
 
 const SideBarHeader = styled.div`
   height: 50px;
@@ -72,7 +72,7 @@ const SideBarHeader = styled.div`
   display: flex;
   align-items: center;
   padding: 0 20px;
-`
+`;
 
 const SideBarFooter = styled.div`
   height: 50px;
@@ -88,13 +88,13 @@ const SideBarFooter = styled.div`
   & a:hover {
     text-decoration: underline;
   }
-`
+`;
 
 const Content = styled.div`
   min-height: 100%;
   flex: 1;
   overflow-y: scroll;
-`
+`;
 
 const IconNavLink = styled(NavLink)`
   display: flex;
@@ -105,29 +105,28 @@ const IconNavLink = styled(NavLink)`
   color: #666;
 
   & span svg path {
-      fill: #666;
-    }
+    fill: #666;
+  }
 
   &.active span svg path {
-      fill: #111;
-    }
+    fill: #111;
+  }
 
   & span[disabled] svg path {
-      fill: #ccc;
-    }
- 
-`
+    fill: #ccc;
+  }
+`;
 
 const LinkIcon = styled.span`
-    & svg {
-        width: 30px;
-        height: 30px;
-    }
+  & svg {
+    width: 30px;
+    height: 30px;
+  }
 
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-`
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const slidedown = keyframes`
   from {
@@ -137,24 +136,24 @@ const slidedown = keyframes`
   to {
     top: 0;
   }
-`
+`;
 
 const ErrorBar = styled.div`
   position: absolute;
-  top:0;
+  top: 0;
   left: 40%;
   min-width: 200px;
   max-width: 500px;
-  margin-left:0;
-  margin-right:0;
+  margin-left: 0;
+  margin-right: 0;
   background-color: #faeeed;
   color: #582522;
   padding: 10px 20px;
   animation: ${slidedown} 0.3s ease-in-out;
   border: 1px solid #f5c6c4;
   border-radius: 0 0 5px 5px;
-  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-`
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+`;
 
 const MENU_ITEMS = [
   // {
@@ -163,47 +162,47 @@ const MENU_ITEMS = [
   //   icon: Icons.Home
   // },
   {
-    to: '/library',
-    title: '财政图书馆',
+    to: "/library",
+    title: "财政图书馆",
     icon: Icons.Library,
   },
   {
-    to: '/tools',
-    title: '财政助手',
-    icon: Icons.Apps
+    to: "/tools",
+    title: "财政助手",
+    icon: Icons.Apps,
   },
 
   {
-    to: '/gpt',
-    title: '财政GPT',
+    to: "/gpt",
+    title: "财政GPT",
     icon: Icons.Chat,
-    disabled: true
+    disabled: true,
   },
-]
+];
 
 function Layout() {
-  const { logout, errorMessage } = useStore()
-  window.document.title = '绍兴财政局智慧系统'
+  const { logout, errorMessage } = useStore();
+  window.document.title = "绍兴财政局智慧系统";
 
-  if (!pb.authStore.token) {
-    return <Login />
+  if (!pb.authStore.isValid) {
+    return <Login />;
   }
   return (
     <Container>
       <SideBar>
-        <SideBarHeader>欢迎回来，{pb?.authStore?.model?.email || ''}</SideBarHeader>
+        <SideBarHeader>欢迎回来，{pb?.authStore?.model?.email || ""}</SideBarHeader>
         <nav>
           <ul>
-            {
-              MENU_ITEMS.map(m => (
-                <li key={m.title}>
-                  <IconNavLink to={m.to} disabled={m.disabled}>
-                    <LinkIcon disabled={m.disabled}><m.icon></m.icon></LinkIcon>
-                    <span>{m.title}</span>
-                  </IconNavLink>
-                </li>
-              ))
-            }
+            {MENU_ITEMS.map((m) => (
+              <li key={m.title}>
+                <IconNavLink to={m.to} disabled={m.disabled}>
+                  <LinkIcon disabled={m.disabled}>
+                    <m.icon></m.icon>
+                  </LinkIcon>
+                  <span>{m.title}</span>
+                </IconNavLink>
+              </li>
+            ))}
           </ul>
         </nav>
         <SideBarFooter>
@@ -214,8 +213,8 @@ function Layout() {
         <Outlet />
         {errorMessage && <ErrorBar>{errorMessage}</ErrorBar>}
       </Content>
-    </Container >
-  )
+    </Container>
+  );
 }
 
 function App() {
@@ -226,7 +225,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="tools" element={<Tools />} />
           <Route path="tools/sum" element={<SummarizeExcel />} />
-          <Route path='tools/newsum' element={<NewSummarizeExcel />}></Route>
+          <Route path="tools/newsum" element={<NewSummarizeExcel />}></Route>
           <Route path="library" element={<Library />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
@@ -235,4 +234,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

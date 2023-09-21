@@ -10,5 +10,5 @@ import { ReactComponent as File } from '../assets/file.svg';
 import { ReactComponent as Word } from '../assets/word.svg';
 
 export default {
-    Excel, Find, Gear, Graph, Home, Apps, Library, Chat, File, Word
+    Excel, Find, Gear, Graph, Home, Apps, Library, Chat, File, Word, Pdf: File
 };

@@ -183,7 +183,7 @@ const Library = ({ }) => {
                         {
                             files.map(f => (
                                 <FileLink key={f.id}>
-                                    <FileIcon>{createElement(Icons[FILE_EXT[f.file.split('.').pop()] || 'File'])}</FileIcon>
+                                    <FileIcon>{createElement(Icons?.[FILE_EXT?.[f.file.split('.').pop()] || 'File'] || Icons['File'])}</FileIcon>
                                     <FileName href={process.env.REACT_APP_API_URL_BASE + API_PATH_FILE + `${f.id}/${f.file}`} target="_blank">{f.filename}</FileName>
                                     <FileTime>{new Date(f.created).toLocaleString()}</FileTime>
                                     |

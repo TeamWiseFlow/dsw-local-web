@@ -12,6 +12,7 @@ import SummarizeExcel from "./tools/SummarizeExcel";
 import NewSummarizeExcel from "./tools/NewSummarizeExcel";
 import Home from "./components/Home";
 import Library from "./components/Library";
+import Chat from "./components/Chat";
 import Icons from "./components/Icons";
 import PageNotFound from "./components/PageNotFound";
 
@@ -28,7 +29,7 @@ const SideBar = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #f7f7f7;
+  background-color: var(--background-mid);
   border-right: 1px solid #ccc;
 
   & nav {
@@ -67,11 +68,11 @@ const SideBar = styled.div`
 `;
 
 const SideBarHeader = styled.div`
-  height: 50px;
+  min-height: 50px;
   border-bottom: 1px solid #ccc;
   display: flex;
   align-items: center;
-  padding: 0 20px;
+  padding: 10px 20px;
 `;
 
 const SideBarFooter = styled.div`
@@ -176,7 +177,6 @@ const MENU_ITEMS = [
     to: "/gpt",
     title: "财政GPT",
     icon: Icons.Chat,
-    disabled: true,
   },
 ];
 
@@ -227,6 +227,7 @@ function App() {
           <Route path="tools/sum" element={<SummarizeExcel />} />
           <Route path="tools/newsum" element={<NewSummarizeExcel />}></Route>
           <Route path="library" element={<Library />} />
+          <Route path="gpt" element={<Chat />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
       </Routes>

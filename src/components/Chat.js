@@ -13,7 +13,6 @@ const Container = styled.div`
 `;
 
 const Content = styled.div`
-  padding: 20px 40px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -77,10 +76,75 @@ const Input = styled.input`
     outline: none;
   }
 `;
-function Chat() {
-  const [result, setResult] = useState(null);
+const Header = styled.div`
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-bottom: 1px solid #eee;
+`;
 
+const ChatContent = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: stretch;
+`;
+
+const Row = styled.div`
+  padding: 20px;
+
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+`;
+const QuestionRow = styled(Row)`
+  background-color: white;
+`;
+const AnswerRow = styled(Row)`
+  background-color: #f8f8f8;
+`;
+const HeaderText = styled.div`
+  text-align: center;
+`;
+const RowText = styled.div`
+  width: 80ch;
+  max-width: 90%;
+`;
+const IcoRow = styled.div`
+  width: 30px;
+  height: 30px;
+
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const IcoQuestion = styled(IcoRow)`
+  background-color: #ea3419;
+`;
+
+const IcoAnswer = styled(IcoRow)`
+  background-color: #4489ea;
+`;
+
+const title = "财政GPT";
+
+function Chat() {
+  const [answer, setAnswer] = useState(null);
   const [question, setQuestion] = useState("");
+
+  useEffect(() => {
+    setQuestion("这是一个测试问题");
+    setAnswer({
+      text: "这是一个测试回答",
+    });
+  }, []);
 
   const onSend = () => {
     if (!question) return;
@@ -88,7 +152,23 @@ function Chat() {
 
   return (
     <Container>
-      <Content>{(result && <div>result</div>) || <Placeholder>财政GPT</Placeholder>}</Content>
+      <Content>
+        {(answer && (
+          <ChatContent>
+            <Header>
+              <HeaderText>{title}</HeaderText>
+            </Header>
+            <QuestionRow>
+              <IcoQuestion>Q</IcoQuestion>
+              <RowText>{question}</RowText>
+            </QuestionRow>
+            <AnswerRow>
+              <IcoAnswer>A</IcoAnswer>
+              <RowText>{answer.text}</RowText>
+            </AnswerRow>
+          </ChatContent>
+        )) || <Placeholder>{title}</Placeholder>}
+      </Content>
       <Footer>
         <Send>
           <Input placeholder={"描述您的问题"} onChange={(e) => setQuestion(e.target.value)} value={question} />

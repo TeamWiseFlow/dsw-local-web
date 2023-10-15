@@ -169,7 +169,7 @@ const UploadButton = ({ accept, onSelectFiles }) => {
 
   return (
     <>
-      <Button style={{ cursor: "pointer" }} onClick={() => ref.current.click()}>
+      <Button $primary style={{ cursor: "pointer" }} onClick={() => ref.current.click()}>
         上传文件
       </Button>
       <input type="file" accept={accept} ref={ref} hidden onChange={onChange} onClick={onClick} />
@@ -232,7 +232,9 @@ const Library = ({}) => {
               <Icons.Find />
             </Icon>
             <Input placeholder={"关键词"} onChange={(e) => setKeywords(e.target.value)} value={keywords} />
-            <Button disabled={!keywords}>搜索</Button>
+            <Button $primary disabled={!keywords}>
+              搜索
+            </Button>
           </Bar>
         </Search>
 
@@ -250,7 +252,7 @@ const Library = ({}) => {
             {files.map((f) => (
               <FileLink key={f.id}>
                 <FileIcon>{createElement(Icons?.[FILE_EXT?.[f.file.split(".").pop()] || "File"] || Icons["File"])}</FileIcon>
-                <FileName href={process.env.REACT_APP_API_URL_BASE + API_PATH_FILE + `${f.id}/${f.file}`} target="_blank">
+                <FileName href={process.env.REACT_APP_API_URL_BASE + `/api/files/documents/${f.id}/${f.file}`} target="_blank">
                   {f.filename}
                 </FileName>
                 <FileIndex $indexed={f.indexed}>{f.indexed ? "已索引" : "未索引"}</FileIndex>

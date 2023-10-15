@@ -5,11 +5,9 @@ import "./App.css";
 import { Outlet, NavLink, BrowserRouter, Routes, Route } from "react-router-dom";
 
 import ErrorPage from "./components/ErrorPage";
-// import SearchFile from './components/SearchFile'
 import Login from "./components/Login";
 import Tools from "./tools/Tools";
-import SummarizeExcel from "./tools/SummarizeExcel";
-import NewSummarizeExcel from "./tools/NewSummarizeExcel";
+import BudgetAnalysis from "./tools/BudgetAnalysis";
 import Home from "./components/Home";
 import Library from "./components/Library";
 import Chat from "./components/Chat";
@@ -224,8 +222,7 @@ function App() {
         <Route path="/" element={<Layout />} errorElement={<ErrorPage />}>
           <Route index element={<Home />} />
           <Route path="tools" element={<Tools />} />
-          <Route path="tools/sum" element={<SummarizeExcel />} />
-          <Route path="tools/newsum" element={<NewSummarizeExcel />}></Route>
+          <Route path="tools/ba" element={<BudgetAnalysis />} />
           <Route path="library" element={<Library />} />
           <Route path="gpt" element={<Chat />} />
           <Route path="*" element={<PageNotFound />} />

@@ -32,8 +32,8 @@ onRecordAfterCreateRequest((e) => {
 // 尝试从中台删除，如果成功，再删除pb记录。如果失败，不删除pb记录。
 onRecordBeforeDeleteRequest((e) => {
   const config = require(`${__hooks}/config.js`);
-  const file_dir = config.pb.baseURL + "/api/files/documents/";
-  const file_path = `${file_dir}${e.record.id}/${e.record.get("file")}`;
+  // const file_dir = config.pb.baseURL + "/api/files/documents/";
+  const file_name = e.record.get("file");
   console.log("file to delete:", file_path);
   const admin = e.httpContext.get("admin");
   //   console.log(JSON.stringify(admin, null, 2));
@@ -43,7 +43,7 @@ onRecordBeforeDeleteRequest((e) => {
     body: JSON.stringify({
       user_id: (admin && admin.id) || "admin",
       type: "file",
-      content: file_path,
+      content: file_name,
     }),
     headers: { "content-type": "application/json" },
     timeout: 120, // in seconds

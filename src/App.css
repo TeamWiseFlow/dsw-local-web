@@ -3,9 +3,11 @@
 :root {
   --background-mid: #f7f7f7;
   --text-placeholder: #ddd;
-  --text-color: #121416d8;
+  --text: #121416d8;
   --link-color: #543fd7;
   --button-primary: #2a4aff;
+  --button-secondary: #fff;
+  --button-disabled: #ddd;
   --text-warn: #bc0d04;
   --text-ok: #0dbc04;
   --text-muted: #999;

@@ -94,8 +94,7 @@ const ResultList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
-  padding: 0 ${STYLE_CONFIG.padding}px ${STYLE_CONFIG.padding}px
-    ${STYLE_CONFIG.padding}px;
+  padding: 0 ${STYLE_CONFIG.padding}px ${STYLE_CONFIG.padding}px ${STYLE_CONFIG.padding}px;
 `;
 
 const FileLinkContainer = styled.div`
@@ -133,14 +132,7 @@ const FileLink = (props) => {
  * onChange - 选择文件变化时的回调函数，返回选中的文件列表。
  *
  */
-const SearchFile = ({
-  max,
-  setVisible,
-  placeholder,
-  keyword,
-  filters,
-  onChange,
-}) => {
+const SearchFile = ({ max, setVisible, placeholder, keyword, filters, onChange }) => {
   filters = filters || {
     ext: ["xlsx", "xls"],
   };
@@ -153,7 +145,8 @@ const SearchFile = ({
   useEffect(() => {
     (async () => {
       let res = await getFiles(inputValue, filters);
-      if (!res.error) {
+      // console.log(inputValue.length, res);
+      if (res && !res.error) {
         setFiles(res);
       }
     })();
@@ -166,10 +159,7 @@ const SearchFile = ({
     // }
   };
 
-  const debouncedChangeHandler = useMemo(
-    () => debounce(handleInputChange, 500),
-    [inputValue]
-  );
+  const debouncedChangeHandler = useMemo(() => debounce(handleInputChange, 500), [inputValue]);
 
   const handleFileClick = (file) => {
     const updatedFiles = files.map((f) => {
@@ -177,7 +167,7 @@ const SearchFile = ({
         return { ...f, selected: !f.selected };
       } else {
         if (max === 1) {
-          f.selected = false
+          f.selected = false;
         }
         return f;
       }
@@ -209,32 +199,27 @@ const SearchFile = ({
         <Icon>
           <Icons.Find />
         </Icon>
-        <Input
-          placeholder={placeholder || "查找文件"}
-          onChange={debouncedChangeHandler}
-        />
+        <Input placeholder={placeholder || "查找文件"} onChange={debouncedChangeHandler} />
       </Bar>
       <Divider />
       {/* <Filters /> */}
       <Result>
         {files.length > 0 && (
           <ResultBar>
-            <ResultHint>{max === 1 ? '点击选择文件' : '点击多选文件'}</ResultHint>
+            <ResultHint>{max === 1 ? "点击选择文件" : "点击多选文件"}</ResultHint>
             {max !== 1 && <SecondaryButton onClick={selectAll}>全选</SecondaryButton>}
             <SecondaryButton onClick={selectNone}>取消选择</SecondaryButton>
             {files.find((f) => f.selected) && (
-              <Button style={{ cursor: 'pointer' }} onClick={selectOk}>确定</Button>
+              <Button style={{ cursor: "pointer" }} onClick={selectOk}>
+                确定
+              </Button>
             )}
           </ResultBar>
         )}
         {files.length > 0 && (
           <ResultList>
             {files.map((f) => (
-              <FileLink
-                key={f.id}
-                selected={f.selected}
-                onClick={() => handleFileClick(f)}
-              >
+              <FileLink key={f.id} selected={f.selected} onClick={() => handleFileClick(f)}>
                 {f.filename}
               </FileLink>
             ))}

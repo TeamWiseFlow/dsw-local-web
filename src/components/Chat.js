@@ -1,9 +1,8 @@
 import styled from "styled-components";
-import { createElement, useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect } from "react";
 import Icons from "./Icons";
 import { useStore } from "../useStore";
-import { API_PATH_FILE, FILE_EXT, ERROR_API } from "../constants";
-import { Button } from "./Common";
+import { ERROR_API } from "../constants";
 
 import Loading from "./Loading";
 

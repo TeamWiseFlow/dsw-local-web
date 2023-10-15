@@ -24,6 +24,9 @@ const useStore = create((set, get) => ({
     pb.authStore.clear();
     set({ token: "" });
   },
+  getUser: () => {
+    return pb.authStore.model;
+  },
   getFiles: async (keyword, filters) => {
     const _exts = (filters && filters.ext && filters.ext.length > 0 && filters.ext) || ["%"];
     const _filename = keyword && keyword != "*" ? `%${keyword}%` : "%";
@@ -34,7 +37,7 @@ const useStore = create((set, get) => ({
         filter: _filter,
         sort: "-updated",
       });
-      // console.log(data)
+      // console.log(data);
       return data;
     } catch (err) {
       if (err.isAbort) return;

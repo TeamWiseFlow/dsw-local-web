@@ -120,8 +120,8 @@ export default function BudgetAnalysis() {
     const { flag, result } = res;
     if (flag < 0) {
       setErrorMessage(ERROR_API["error"] + ":" + flag);
-    } else if (flag === 0) {
-      setResultFile(`${process.env.REACT_APP_RESULT_URL}${result}`);
+    } else if (flag === 21 && result.length == 2 && result[1].type == "file") {
+      setResultFile(`${process.env.REACT_APP_RESULT_URL}${result[1].answer}`);
     } else if (flag === 1) {
       setErrorMessage("输入的文件路径不对");
     } else if (flag === 2) {

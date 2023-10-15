@@ -196,10 +196,11 @@ const Library = ({}) => {
     fetchFiles();
   }, []);
 
-  const clearSearch = () => {
-    setKeywords("");
-    setSearchFiles(files);
-  };
+  useEffect(() => {
+    if (!keywords) {
+      setSearchFiles(files);
+    }
+  }, [keywords]);
 
   const fetchFiles = async () => {
     console.log("fetching files");
@@ -272,7 +273,7 @@ const Library = ({}) => {
         </Search>
 
         <Toolbar>
-          {keywords && !loading && <Button onClick={clearSearch}>显示全部文件</Button>}
+          {keywords && !loading && <Button onClick={() => setKeywords("")}>显示全部文件</Button>}
           {!keywords && !loading && (
             <UploadButton
               accept={Object.keys(FILE_EXT)

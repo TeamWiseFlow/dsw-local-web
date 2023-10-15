@@ -6,4 +6,7 @@
   --text-color: #121416d8;
   --link-color: #543fd7;
   --button-primary: #2a4aff;
+  --text-warn: #bc0d04;
+  --text-ok: #0dbc04;
+  --text-muted: #999;
 }

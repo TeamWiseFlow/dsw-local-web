@@ -90,11 +90,14 @@ const FileTime = styled.span`
   font-size: 0.8rem;
   color: #666;
 `;
-
+const FileIndex = styled.span`
+  font-size: 0.8rem;
+  color: ${(props) => (props.$indexed && "var(--text-ok)") || "var(--text-muted)"};
+`;
 const FileAction = styled.div`
   font-size: 0.8rem;
   cursor: pointer;
-  color: ${(props) => (props.$warning && "#bc0d04") || "#666"};
+  color: ${(props) => (props.$warning && "var(--text-warn)") || "var(--text-muted)"};
 
   &:hover {
     text-decoration: underline;
@@ -182,23 +185,24 @@ const Library = ({}) => {
   const [keywords, setKeywords] = useState("");
 
   useEffect(() => {
-    (async () => {
-      let res = await getFiles();
-      if (res && !res.error) {
-        setFiles(res);
-      }
-    })();
+    fetchFiles();
   }, []);
 
-  // useEffect(() => {
-  // }, [files])
+  const fetchFiles = async () => {
+    console.log("fetching files");
+    let res = await getFiles();
+    if (res && !res.error) {
+      setFiles(res);
+    }
+  };
 
   const onSelectFiles = async (selectedFiles) => {
     //        console.log(files)
     let res = await uploadFile(selectedFiles[0]);
     if (res && !res.error) {
       // console.log('uploaded file', res)
-      setFiles([res, ...files]);
+      // setFiles([res, ...files]);
+      fetchFiles(); // 再次刷新文件清单，因为CMS新增文件后，pb hook向中台添加并更新是否索引字段
     }
   };
 
@@ -209,8 +213,11 @@ const Library = ({}) => {
   const onDeleteFile = async (id) => {
     let res = await deleteFile(id);
     if (!res) {
-      setFiles(files.filter((f) => f.id != id));
+      //setFiles(files.filter((f) => f.id != id));
     }
+    // pb hook向中台删除文件后，再次刷新文件清单，因为可能中台删除失败，pb删除被终止
+    fetchFiles();
+    setDeleting("");
   };
 
   return (
@@ -246,6 +253,7 @@ const Library = ({}) => {
                 <FileName href={process.env.REACT_APP_API_URL_BASE + API_PATH_FILE + `${f.id}/${f.file}`} target="_blank">
                   {f.filename}
                 </FileName>
+                <FileIndex $indexed={f.indexed}>{f.indexed ? "已索引" : "未索引"}</FileIndex>
                 <FileTime>{new Date(f.created).toLocaleString()}</FileTime>|{deleting != f.id && <FileAction onClick={() => onBeginDeleteFile(f.id)}>删除</FileAction>}
                 {deleting == f.id && (
                   <>

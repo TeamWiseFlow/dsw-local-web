@@ -29,7 +29,7 @@ onRecordAfterCreateRequest((e) => {
   $app.dao().saveRecord(e.record);
 }, "documents");
 
-// 尝试从中台删除，如果成功，再删除pb记录。如果失败，不删除pb记录。
+// 尝试从中台删除，如果成功，再删除pb记录。
 onRecordBeforeDeleteRequest((e) => {
   const config = require(`${__hooks}/config.js`);
   // const file_dir = config.pb.baseURL + "/api/files/documents/";
@@ -53,7 +53,7 @@ onRecordBeforeDeleteRequest((e) => {
     console.log(JSON.stringify(res, null, 2));
     e.record.set("indexed", false);
     $app.dao().saveRecord(e.record);
-    throw new Error("中台删除文件失败");
+    //throw new Error("中台删除文件失败"); // 不抛出异常，继续删除pb记录
   }
   // proceed normal deletion by return nil
   return true;

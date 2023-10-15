@@ -34,7 +34,7 @@ onRecordBeforeDeleteRequest((e) => {
   const config = require(`${__hooks}/config.js`);
   // const file_dir = config.pb.baseURL + "/api/files/documents/";
   const file_name = e.record.get("file");
-  console.log("file to delete:", file_path);
+  console.log("file to delete:", file_name);
   const admin = e.httpContext.get("admin");
   //   console.log(JSON.stringify(admin, null, 2));
   const res = $http.send({
@@ -50,7 +50,7 @@ onRecordBeforeDeleteRequest((e) => {
   });
 
   if (res.statusCode !== 200) {
-    console.log(JSON.stringify(res, null, 2));
+    // console.log(JSON.stringify(res, null, 2));
     e.record.set("indexed", false);
     $app.dao().saveRecord(e.record);
     //throw new Error("中台删除文件失败"); // 不抛出异常，继续删除pb记录

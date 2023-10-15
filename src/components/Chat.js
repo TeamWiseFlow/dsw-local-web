@@ -213,8 +213,8 @@ function Chat() {
             <AnswerRow>
               <IcoAnswer>A</IcoAnswer>
               <RowText>
-                {answer.text.split("\n").map((l) => (
-                  <p>{l}</p>
+                {answer.text.split("\n").map((l, i) => (
+                  <p key={i}>{l}</p>
                 ))}
               </RowText>
             </AnswerRow>

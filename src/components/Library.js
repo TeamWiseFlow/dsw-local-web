@@ -2,8 +2,9 @@ import styled from "styled-components";
 import { createElement, useState, useEffect, useMemo, useRef } from "react";
 import Icons from "./Icons";
 import { useStore } from "../useStore";
-import { API_PATH_FILE, FILE_EXT } from "../constants";
+import { FILE_EXT, ERROR_API } from "../constants";
 import { Button } from "./Common";
+import Loading from "../components/Loading";
 
 const Container = styled.div`
   display: flex;
@@ -132,8 +133,12 @@ const Input = styled.input`
   line-height: 1rem;
   font-size: 1rem;
   flex: 1;
-  &focus {
+  &:focus {
     outline: none;
+  }
+  &:disabled {
+    background-color: white;
+    color: var(--text-disabled);
   }
 `;
 
@@ -151,6 +156,8 @@ const Toolbar = styled.div`
   padding: 10px 10px;
   justify-content: flex-end;
 `;
+
+const Hint = styled.p``;
 
 const UploadButton = ({ accept, onSelectFiles }) => {
   const ref = useRef(null);
@@ -178,30 +185,56 @@ const UploadButton = ({ accept, onSelectFiles }) => {
 };
 
 const Library = ({}) => {
-  const { getFiles, uploadFile, deleteFile } = useStore();
+  const { getFiles, uploadFile, deleteFile, dm, setErrorMessage } = useStore();
   const [files, setFiles] = useState([]);
+  const [searchFiles, setSearchFiles] = useState([]); // 搜索结果，可能是files的子集，没有搜索时显示全部
   const [deleting, setDeleting] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const [keywords, setKeywords] = useState("");
 
   useEffect(() => {
     fetchFiles();
   }, []);
 
+  const clearSearch = () => {
+    setKeywords("");
+    setSearchFiles(files);
+  };
+
   const fetchFiles = async () => {
     console.log("fetching files");
     let res = await getFiles();
     if (res && !res.error) {
+      // console.log(res);
       setFiles(res);
+      setSearchFiles(res);
+    }
+  };
+
+  const onSearch = async () => {
+    if (!keywords) return;
+
+    setLoading(true);
+    let res = await dm(keywords);
+    setLoading(false);
+    if (res.flag < 0) {
+      //错误
+      setErrorMessage(ERROR_API["error"] + ":" + res.flag);
+    } else if (res.flag == 1 || res.result.length == 0 || res.result.filter((result) => result.type === "file").length == 0) {
+      // 无结果
+      setSearchFiles([]);
+    } else if (res.flag == 0) {
+      // 显示结果清单里所有file类型
+      const filteredFiles = files.filter((file) => {
+        return res.result.some((result) => result.type === "file" && result.answer === file.file);
+      });
+      setSearchFiles(filteredFiles);
     }
   };
 
   const onSelectFiles = async (selectedFiles) => {
-    //        console.log(files)
     let res = await uploadFile(selectedFiles[0]);
     if (res && !res.error) {
-      // console.log('uploaded file', res)
-      // setFiles([res, ...files]);
       fetchFiles(); // 再次刷新文件清单，因为CMS新增文件后，pb hook向中台添加并更新是否索引字段
     }
   };
@@ -231,25 +264,29 @@ const Library = ({}) => {
             <Icon>
               <Icons.Find />
             </Icon>
-            <Input placeholder={"关键词"} onChange={(e) => setKeywords(e.target.value)} value={keywords} />
-            <Button $primary disabled={!keywords}>
+            <Input disabled={loading} placeholder={"关键词"} onChange={(e) => setKeywords(e.target.value)} value={keywords} />
+            <Button $primary disabled={!keywords || loading} onClick={onSearch}>
               搜索
             </Button>
           </Bar>
         </Search>
 
         <Toolbar>
-          <UploadButton
-            accept={Object.keys(FILE_EXT)
-              .map((k) => "." + k)
-              .join(",")}
-            onSelectFiles={onSelectFiles}
-          />
+          {keywords && !loading && <Button onClick={clearSearch}>显示全部文件</Button>}
+          {!keywords && !loading && (
+            <UploadButton
+              accept={Object.keys(FILE_EXT)
+                .map((k) => "." + k)
+                .join(",")}
+              onSelectFiles={onSelectFiles}
+            />
+          )}
         </Toolbar>
-
+        {loading && <Loading>・・・</Loading>}
         <FileListContainer>
           <FileList>
-            {files.map((f) => (
+            {searchFiles.length == 0 && <Hint>没有查询到相关文件</Hint>}
+            {searchFiles.map((f) => (
               <FileLink key={f.id}>
                 <FileIcon>{createElement(Icons?.[FILE_EXT?.[f.file.split(".").pop()] || "File"] || Icons["File"])}</FileIcon>
                 <FileName href={process.env.REACT_APP_API_URL_BASE + `/api/files/documents/${f.id}/${f.file}`} target="_blank">

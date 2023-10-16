@@ -9,6 +9,7 @@ import { ReactComponent as Chat } from "../assets/chat.svg";
 import { ReactComponent as File } from "../assets/file.svg";
 import { ReactComponent as Word } from "../assets/word.svg";
 import { ReactComponent as Send } from "../assets/send.svg";
+import { ReactComponent as Pdf } from "../assets/pdf.svg";
 
 export default {
   Excel,
@@ -22,4 +23,5 @@ export default {
   File,
   Word,
   Send,
+  Pdf,
 };

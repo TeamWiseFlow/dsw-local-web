@@ -1,9 +1,9 @@
 // 添加到中台，并标记是否索引。添加失败不标记索引，但pb记录仍在。
 onRecordAfterCreateRequest((e) => {
   const config = require(`${__hooks}/config.js`);
-  const file_dir = config.pb.baseURL + "/api/files/documents/";
-  const file_path = `${file_dir}${e.record.id}/${e.record.get("file")}`;
 
+  const file_path = config.pb.baseDir + e.record.collection().id + "/" + e.record.id + "/" + e.record.get("file");
+  console.log("file to add:", file_path);
   const admin = e.httpContext.get("admin");
   //   console.log(JSON.stringify(admin, null, 2));
   const res = $http.send({
@@ -32,7 +32,6 @@ onRecordAfterCreateRequest((e) => {
 // 尝试从中台删除，如果成功，再删除pb记录。
 onRecordBeforeDeleteRequest((e) => {
   const config = require(`${__hooks}/config.js`);
-  // const file_dir = config.pb.baseURL + "/api/files/documents/";
   const file_name = e.record.get("file");
   console.log("file to delete:", file_name);
   const admin = e.httpContext.get("admin");

@@ -153,13 +153,14 @@ const Search = styled.div`
 const Toolbar = styled.div`
   align-self: stretch;
   display: flex;
+  gap: 10px;
   padding: 10px 10px;
   justify-content: flex-end;
 `;
 
 const Hint = styled.p``;
 
-const UploadButton = ({ accept, onSelectFiles }) => {
+const UploadButton = ({ disabled, accept, onSelectFiles }) => {
   const ref = useRef(null);
 
   const onChange = (e) => {
@@ -176,7 +177,7 @@ const UploadButton = ({ accept, onSelectFiles }) => {
 
   return (
     <>
-      <Button $primary style={{ cursor: "pointer" }} onClick={() => ref.current.click()}>
+      <Button disabled={disabled} $primary style={{ cursor: "pointer" }} onClick={() => ref.current.click()}>
         上传文件
       </Button>
       <input type="file" accept={accept} ref={ref} hidden onChange={onChange} onClick={onClick} />
@@ -198,6 +199,7 @@ const Library = ({}) => {
 
   useEffect(() => {
     if (!keywords) {
+      //console.log("keywords is empty. files count", files.length);
       setSearchFiles(files);
     }
   }, [keywords]);
@@ -234,10 +236,12 @@ const Library = ({}) => {
   };
 
   const onSelectFiles = async (selectedFiles) => {
+    setLoading(true);
     let res = await uploadFile(selectedFiles[0]);
     if (res && !res.error) {
       fetchFiles(); // 再次刷新文件清单，因为CMS新增文件后，pb hook向中台添加并更新是否索引字段
     }
+    setLoading(false);
   };
 
   const onBeginDeleteFile = (id) => {
@@ -245,6 +249,7 @@ const Library = ({}) => {
   };
 
   const onDeleteFile = async (id) => {
+    setLoading(true);
     let res = await deleteFile(id);
     if (!res) {
       //setFiles(files.filter((f) => f.id != id));
@@ -252,6 +257,13 @@ const Library = ({}) => {
     // pb hook向中台删除文件后，再次刷新文件清单，因为可能中台删除失败，pb删除被终止
     fetchFiles();
     setDeleting("");
+    setLoading(false);
+  };
+
+  const onInputKeyPress = (e) => {
+    if (e.key === "Enter") {
+      onSearch();
+    }
   };
 
   return (
@@ -265,7 +277,7 @@ const Library = ({}) => {
             <Icon>
               <Icons.Find />
             </Icon>
-            <Input disabled={loading} placeholder={"关键词"} onChange={(e) => setKeywords(e.target.value)} value={keywords} />
+            <Input disabled={loading} placeholder={"关键词"} onKeyPress={onInputKeyPress} onChange={(e) => setKeywords(e.target.value)} value={keywords} />
             <Button $primary disabled={!keywords || loading} onClick={onSearch}>
               搜索
             </Button>
@@ -274,14 +286,14 @@ const Library = ({}) => {
 
         <Toolbar>
           {keywords && !loading && <Button onClick={() => setKeywords("")}>显示全部文件</Button>}
-          {!keywords && !loading && (
-            <UploadButton
-              accept={Object.keys(FILE_EXT)
-                .map((k) => "." + k)
-                .join(",")}
-              onSelectFiles={onSelectFiles}
-            />
-          )}
+
+          <UploadButton
+            disabled={loading || keywords}
+            accept={Object.keys(FILE_EXT)
+              .map((k) => "." + k)
+              .join(",")}
+            onSelectFiles={onSelectFiles}
+          />
         </Toolbar>
         {loading && <Loading>・・・</Loading>}
         <FileListContainer>

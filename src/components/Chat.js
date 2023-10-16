@@ -184,7 +184,7 @@ function Chat() {
     } else if (res.flag == 1 || res.result.length == 0 || res.result.filter((result) => result.type === "text").length == 0) {
       // 无结果
       let message = ERROR_API[1];
-      if (res.result.length > 0) {
+      if (res.flag == 1 && res.result.length > 0) {
         message = res.result[0].answer;
       }
       setAnswer({
@@ -195,6 +195,13 @@ function Chat() {
       setAnswer({
         text: res.result.find((r) => r.type == "text").answer,
       });
+    }
+    setQuestion("");
+  };
+
+  const onInputKeyPress = (e) => {
+    if (e.key === "Enter") {
+      onSend();
     }
   };
 
@@ -228,7 +235,7 @@ function Chat() {
       </Content>
       <Footer>
         <Send>
-          <Input disabled={loading} placeholder={"描述您的问题"} onChange={(e) => setQuestion(e.target.value)} value={question} />
+          <Input disabled={loading} placeholder={"描述您的问题"} onKeyPress={onInputKeyPress} onChange={(e) => setQuestion(e.target.value)} value={question} />
           <SendIcon disabled={!question || loading} onClick={onSend}>
             <Icons.Send fill={(question && !loading && "white") || "#eee"} />
           </SendIcon>

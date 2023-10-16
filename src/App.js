@@ -2,7 +2,7 @@ import React from "react";
 import styled, { keyframes } from "styled-components";
 import "./App.css";
 
-import { Outlet, NavLink, BrowserRouter, Routes, Route } from "react-router-dom";
+import { Outlet, NavLink, BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import ErrorPage from "./components/ErrorPage";
 import Login from "./components/Login";
@@ -220,7 +220,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />} errorElement={<ErrorPage />}>
-          <Route index element={<Home />} />
+          <Route index element={<Navigate to="/gpt" />} />
           <Route path="tools" element={<Tools />} />
           <Route path="tools/ba" element={<BudgetAnalysis />} />
           <Route path="library" element={<Library />} />

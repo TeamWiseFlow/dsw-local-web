@@ -9,6 +9,8 @@ export const FILE_EXT = {
   pptx: "Ppt",
   txt: "Txt",
   csv: "Csv",
+  jpg: "Jpg",
+  png: "Png",
 };
 
 // error messages

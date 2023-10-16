@@ -19,12 +19,13 @@ onRecordAfterCreateRequest((e) => {
   });
 
   let indexed = true;
-  if (res.statusCode !== 200) {
-    console.log(JSON.stringify(res, null, 2));
+  let res_json = res.json;
+  console.log(JSON.stringify(res_json, null, 2));
+  if (res.statusCode !== 200 || res_json.flag < 0) {
     indexed = false;
+    // TODO: 如何res_json.result[0].answer错误消息发回给页面？
   }
 
-  //const record = $app.dao().findRecordById("documents", e.record.get("id"));
   e.record.set("indexed", indexed);
   $app.dao().saveRecord(e.record);
 }, "documents");
@@ -48,11 +49,13 @@ onRecordBeforeDeleteRequest((e) => {
     timeout: 120, // in seconds
   });
 
-  if (res.statusCode !== 200) {
-    // console.log(JSON.stringify(res, null, 2));
-    e.record.set("indexed", false);
-    $app.dao().saveRecord(e.record);
-    //throw new Error("中台删除文件失败"); // 不抛出异常，继续删除pb记录
+  let res_json = res.json;
+  console.log(JSON.stringify(res, null, 2));
+  if (res.statusCode !== 200 || res_json.flag < 0) {
+    // 不抛出异常，继续删除pb记录
+    // e.record.set("indexed", false);
+    // $app.dao().saveRecord(e.record);
+    //throw new Error("中台删除文件失败");
   }
   // proceed normal deletion by return nil
   return true;

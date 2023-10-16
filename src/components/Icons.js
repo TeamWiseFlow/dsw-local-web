@@ -10,6 +10,8 @@ import { ReactComponent as File } from "../assets/file.svg";
 import { ReactComponent as Word } from "../assets/word.svg";
 import { ReactComponent as Send } from "../assets/send.svg";
 import { ReactComponent as Pdf } from "../assets/pdf.svg";
+import { ReactComponent as Jpg } from "../assets/jpg.svg";
+import { ReactComponent as Png } from "../assets/png.svg";
 
 export default {
   Excel,
@@ -24,4 +26,6 @@ export default {
   Word,
   Send,
   Pdf,
+  Jpg,
+  Png,
 };

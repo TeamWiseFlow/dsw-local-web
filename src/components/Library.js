@@ -153,9 +153,16 @@ const Search = styled.div`
 const Toolbar = styled.div`
   align-self: stretch;
   display: flex;
-  gap: 10px;
+  gap: 20px;
   padding: 10px 10px;
   justify-content: flex-end;
+  align-items: center;
+`;
+
+const SortButton = styled.div`
+  font-size: 0.8rem;
+  cursor: pointer;
+  color: var(--text-muted);
 `;
 
 const Hint = styled.p``;
@@ -192,9 +199,11 @@ const Library = ({}) => {
   const [deleting, setDeleting] = useState("");
   const [loading, setLoading] = useState(false);
   const [keywords, setKeywords] = useState("");
+  const [orderBy, setOrderBy] = useState("date-asc"); // date-asc, date-desc, name-asc, name-desc
 
   useEffect(() => {
     fetchFiles();
+    toggleSort();
   }, []);
 
   useEffect(() => {
@@ -266,6 +275,12 @@ const Library = ({}) => {
     }
   };
 
+  const toggleSort = () => {
+    setOrderBy(orderBy == "date-desc" ? "date-asc" : "date-desc");
+    searchFiles.sort((a, b) => (new Date(a.created) - new Date(b.created)) * (orderBy == "date-desc" ? 1 : -1));
+    setSearchFiles([...searchFiles]);
+  };
+
   return (
     <Container>
       <Header>
@@ -294,6 +309,9 @@ const Library = ({}) => {
               .join(",")}
             onSelectFiles={onSelectFiles}
           />
+        </Toolbar>
+        <Toolbar>
+          <SortButton onClick={toggleSort}>{orderBy == "date-asc" ? "日期↑" : "日期↓"}</SortButton>
         </Toolbar>
         {loading && <Loading>・・・</Loading>}
         <FileListContainer>

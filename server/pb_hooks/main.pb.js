@@ -13,14 +13,16 @@ onRecordAfterCreateRequest((e) => {
       user_id: (admin && admin.id) || "admin",
       type: "file",
       content: file_path,
+      name: e.record.get("filename"),
     }),
     headers: { "content-type": "application/json" },
     timeout: 120, // in seconds
   });
 
   let indexed = true;
+  console.log(JSON.stringify(res));
   let res_json = res.json;
-  console.log(JSON.stringify(res_json, null, 2));
+  // console.log(JSON.stringify(res_json, null, 2));
   if (res.statusCode !== 200 || res_json.flag < 0) {
     indexed = false;
     // TODO: 如何res_json.result[0].answer错误消息发回给页面？

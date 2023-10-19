@@ -238,7 +238,7 @@ const Library = ({}) => {
     } else if (res.flag == 0 || res.flag == 2) {
       // 显示结果清单里所有file类型
       const filteredFiles = files.filter((file) => {
-        return res.result.some((result) => result.type === "file" && result.answer === file.file);
+        return res.result.some((result) => result.type === "file" && result.answer === file.filename);
       });
       setSearchFiles(filteredFiles);
     }

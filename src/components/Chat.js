@@ -190,7 +190,7 @@ function Chat() {
       setAnswer({
         text: message,
       });
-    } else if (res.flag == 0) {
+    } else if (res.flag == 0 || res.flag == 2) {
       // 显示结果清单里第一个text类型
       setAnswer({
         text: res.result.find((r) => r.type == "text").answer,

@@ -63,8 +63,8 @@ const Modal = styled.div`
   height: auto;
 `;
 
-const run = async (user_id, list) => {
-  const API_URL = process.env.REACT_APP_MID_PLATFORM_URL_BASE + "/new_budget_analysis";
+const run = async (user_id, list, oldVersion = false) => {
+  const API_URL = process.env.REACT_APP_MID_PLATFORM_URL_BASE + (oldVersion ? "/2022_budget_analysis" : "/new_budget_analysis");
   const paths = list.map((i) => `${process.env.REACT_APP_CMS_FILE_DIR}/${i.collectionId}/${i.id}/${i.file}`);
 
   try {
@@ -74,18 +74,20 @@ const run = async (user_id, list) => {
         "Content-Type": "application/json", // mode=no-cors时这个不生效，会422报错
         Accept: "application/json",
       },
-      body: JSON.stringify({
-        user_id: user_id,
-        type: "file",
-        content: paths[0],
-      }),
+      body: oldVersion
+        ? JSON.stringify({ files: paths })
+        : JSON.stringify({
+            user_id: user_id,
+            type: "file",
+            content: paths[0],
+          }),
     });
 
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message);
     }
-
+    console.log(JSON.stringify(response));
     const result = await response.json();
     return result;
   } catch (err) {
@@ -93,7 +95,7 @@ const run = async (user_id, list) => {
   }
 };
 
-export default function BudgetAnalysis() {
+export default function BudgetAnalysis({ oldVersion = false }) {
   const { setErrorMessage, getUser } = useStore();
   let [files, setFiles] = useState([]);
   let [resultFile, setResultFile] = useState("");
@@ -116,8 +118,14 @@ export default function BudgetAnalysis() {
   const onSubmit = async () => {
     setLoading(true);
     let user = getUser();
-    const res = await run((user && user.id) || "admin", files);
+    const res = await run((user && user.id) || "admin", files, oldVersion);
+    if (!res) {
+      setErrorMessage("服务器错误");
+      setLoading(false);
+      return;
+    }
     const { flag, result } = res;
+
     if (flag < 0) {
       setErrorMessage(ERROR_API["error"] + ":" + flag);
     } else if (flag === 21 && result.length == 2 && result[1].type == "file") {
@@ -178,7 +186,7 @@ export default function BudgetAnalysis() {
         </Result>
         {isComponentVisible && (
           <Modal ref={ref}>
-            <SearchFile max={1} setVisible={setIsComponentVisible} onChange={selectFiles} />
+            <SearchFile max={oldVersion ? 10 : 1} setVisible={setIsComponentVisible} onChange={selectFiles} />
           </Modal>
         )}
       </Content>

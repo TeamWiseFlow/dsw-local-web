@@ -76,6 +76,16 @@ const Header = styled.div`
 
 const ICONS = [
   {
+    to: "/tools/ba-old",
+    disabled: false,
+    color: "#89aeef",
+    icon: Icons.Graph,
+    title: "集采统计(旧版)",
+    desc: "多文件汇总统计",
+    version: "0.1.0",
+    updated: "2023-8-15",
+  },
+  {
     to: "/tools/ba",
     disabled: false,
     color: "#65adef",

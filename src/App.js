@@ -223,6 +223,7 @@ function App() {
           <Route index element={<Navigate to="/gpt" />} />
           <Route path="tools" element={<Tools />} />
           <Route path="tools/ba" element={<BudgetAnalysis />} />
+          <Route path="tools/ba-old" element={<BudgetAnalysis oldVersion={true} />} />
           <Route path="library" element={<Library />} />
           <Route path="gpt" element={<Chat />} />
           <Route path="*" element={<PageNotFound />} />

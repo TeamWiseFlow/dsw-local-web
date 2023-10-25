@@ -80,22 +80,29 @@ const FileIcon = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
 `;
 
 const FileName = styled.a`
   margin-right: auto;
   text-decoration: none;
   color: #111;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 const FileTime = styled.span`
   font-size: 0.8rem;
   color: #666;
+  white-space: nowrap;
 `;
 const FileIndex = styled.span`
+  white-space: nowrap;
   font-size: 0.8rem;
   color: ${(props) => (props.$indexed && "var(--text-ok)") || "var(--text-muted)"};
 `;
 const FileAction = styled.div`
+  white-space: nowrap;
   font-size: 0.8rem;
   cursor: pointer;
   color: ${(props) => (props.$warning && "var(--text-warn)") || "var(--text-muted)"};
@@ -103,6 +110,12 @@ const FileAction = styled.div`
   &:hover {
     text-decoration: underline;
   }
+`;
+
+const Divider = styled.div`
+  width: 1px;
+  align-self: stretch;
+  background-color: #eee;
 `;
 
 const Bar = styled.div`
@@ -120,6 +133,7 @@ const Icon = styled.div`
   & svg {
     width: 30px;
     height: 30px;
+    min-width: 30px;
   }
 
   display: flex;
@@ -324,7 +338,9 @@ const Library = ({}) => {
                   {f.filename}
                 </FileName>
                 <FileIndex $indexed={f.indexed}>{f.indexed ? "已索引" : "未索引"}</FileIndex>
-                <FileTime>{new Date(f.created).toLocaleString()}</FileTime>|{deleting != f.id && <FileAction onClick={() => onBeginDeleteFile(f.id)}>删除</FileAction>}
+                <FileTime>{new Date(f.created).toLocaleString()}</FileTime>
+                <Divider></Divider>
+                {deleting != f.id && <FileAction onClick={() => onBeginDeleteFile(f.id)}>删除</FileAction>}
                 {deleting == f.id && (
                   <>
                     <FileAction onClick={() => onDeleteFile(f.id)} $warning>

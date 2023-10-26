@@ -4,7 +4,7 @@ import { ERROR_API } from "../constants.js";
 
 export const useMidPlatform = () => {
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState([]);
+  const [result, setResult] = useState(null);
   const [error, setError] = useState(null); // user errors, caller may show them inline or in global error slider
 
   const { getUser, setErrorMessage } = useStore();
@@ -13,7 +13,7 @@ export const useMidPlatform = () => {
     try {
       setLoading(true);
       setError("");
-      setResult([]);
+      setResult(null);
       let user = getUser();
       if (!payload.user_id) payload.user_id = (user && user.id) || "admin";
 

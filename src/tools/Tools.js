@@ -97,24 +97,24 @@ const ICONS = [
   },
   {
     to: "/tools/alert",
-    disabled: true,
+    disabled: false,
     color: "#78d48e",
     icon: Icons.Gear,
     title: "预算预警",
     desc: "",
-    version: "未开发",
+    version: "预览",
     updated: "",
   },
-  {
-    to: "/tools/compare",
-    disabled: true,
-    color: "#e48c56",
-    icon: Icons.Gear,
-    title: "预决算对比",
-    desc: "",
-    version: "未开发",
-    updated: "",
-  },
+  // {
+  //   to: "/tools/compare",
+  //   disabled: true,
+  //   color: "#e48c56",
+  //   icon: Icons.Gear,
+  //   title: "预决算对比",
+  //   desc: "",
+  //   version: "未开发",
+  //   updated: "",
+  // },
 ];
 
 export default function Tools() {

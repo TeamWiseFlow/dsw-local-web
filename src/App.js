@@ -8,6 +8,7 @@ import ErrorPage from "./components/ErrorPage";
 import Login from "./components/Login";
 import Tools from "./tools/Tools";
 import BudgetAnalysis from "./tools/BudgetAnalysis";
+import BudgetAlert from "./tools/BudgetAlert";
 import Home from "./components/Home";
 import Library from "./components/Library";
 import Chat from "./components/Chat";
@@ -224,6 +225,7 @@ function App() {
           <Route path="tools" element={<Tools />} />
           <Route path="tools/ba" element={<BudgetAnalysis />} />
           <Route path="tools/ba-old" element={<BudgetAnalysis oldVersion={true} />} />
+          <Route path="tools/alert" element={<BudgetAlert />} />
           <Route path="library" element={<Library />} />
           <Route path="gpt" element={<Chat />} />
           <Route path="*" element={<PageNotFound />} />

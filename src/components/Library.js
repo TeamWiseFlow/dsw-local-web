@@ -1,10 +1,12 @@
 import styled from "styled-components";
-import { createElement, useState, useEffect, useMemo, useRef } from "react";
+import { createElement, useState, useEffect, useRef } from "react";
 import Icons from "./Icons";
 import { useStore } from "../useStore";
-import { FILE_EXT, ERROR_API } from "../constants";
+import { FILE_EXT } from "../constants";
 import { Button } from "./Common";
 import Loading from "../components/Loading";
+
+import { useMidPlatform } from "../hooks/useMidPlatform";
 
 const Container = styled.div`
   display: flex;
@@ -211,9 +213,11 @@ const Library = ({}) => {
   const [files, setFiles] = useState([]);
   const [searchFiles, setSearchFiles] = useState([]); // 搜索结果，可能是files的子集，没有搜索时显示全部
   const [deleting, setDeleting] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [keywords, setKeywords] = useState("");
   const [orderBy, setOrderBy] = useState("date-asc"); // date-asc, date-desc, name-asc, name-desc
+
+  const { request, result, loading, setLoading, error, setError } = useMidPlatform();
 
   useEffect(() => {
     fetchFiles();
@@ -221,11 +225,30 @@ const Library = ({}) => {
   }, []);
 
   useEffect(() => {
+    if (error) {
+      setErrorMessage(error);
+    }
+  }, [error]);
+
+  useEffect(() => {
     if (!keywords) {
       //console.log("keywords is empty. files count", files.length);
       setSearchFiles(files);
     }
   }, [keywords]);
+
+  useEffect(() => {
+    if (result.length == 0) {
+      setSearchFiles([]);
+    } else {
+      console.log(result, files);
+      setSearchFiles(
+        files.filter((file) => {
+          return result.some((r) => r.answer === file.filename || r.answer === file.file);
+        })
+      );
+    }
+  }, [result]);
 
   const fetchFiles = async () => {
     console.log("fetching files");
@@ -237,25 +260,20 @@ const Library = ({}) => {
     }
   };
 
-  const onSearch = async () => {
+  const onSubmit = async () => {
     if (!keywords) return;
 
-    setLoading(true);
-    let res = await dm(keywords);
-    setLoading(false);
-    if (res.flag < 0) {
-      //错误
-      setErrorMessage(ERROR_API["error"] + ":" + res.flag);
-    } else if (res.flag == 1 || res.result.length == 0 || res.result.filter((result) => result.type === "file").length == 0) {
-      // 无结果
-      setSearchFiles([]);
-    } else if (res.flag == 0 || res.flag == 2) {
-      // 显示结果清单里所有file类型
-      const filteredFiles = files.filter((file) => {
-        return res.result.some((result) => result.type === "file" && (result.answer === file.filename || result.answer === file.file));
-      });
-      setSearchFiles(filteredFiles);
-    }
+    await request("dm", { type: "text", content: keywords }, (json) => {
+      if (json.flag == 1 || json.result.length == 0 || json.result.filter((r) => r.type === "file").length == 0) {
+        return [];
+      }
+      if (json.flag === 0 || json.flag === 2) {
+        return json.result.filter((r) => r.type === "file");
+      }
+
+      setError("接口返回" + ":" + json.flag);
+      return [];
+    });
   };
 
   const onSelectFiles = async (selectedFiles) => {
@@ -285,7 +303,7 @@ const Library = ({}) => {
 
   const onInputKeyPress = (e) => {
     if (e.key === "Enter") {
-      onSearch();
+      onSubmit();
     }
   };
 
@@ -307,7 +325,7 @@ const Library = ({}) => {
               <Icons.Find />
             </Icon>
             <Input disabled={loading} placeholder={"关键词"} onKeyPress={onInputKeyPress} onChange={(e) => setKeywords(e.target.value)} value={keywords} />
-            <Button $primary disabled={!keywords || loading} onClick={onSearch}>
+            <Button $primary disabled={!keywords || loading} onClick={onSubmit}>
               搜索
             </Button>
           </Bar>

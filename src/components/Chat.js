@@ -2,9 +2,10 @@ import styled from "styled-components";
 import { useState, useEffect } from "react";
 import Icons from "./Icons";
 import { useStore } from "../useStore";
-import { ERROR_API } from "../constants";
 
 import Loading from "./Loading";
+
+import { useMidPlatform } from "../hooks/useMidPlatform";
 
 const Container = styled.div`
   display: flex;
@@ -159,56 +160,51 @@ const EmptyContent = styled.div`
 const title = "财政GPT";
 
 function Chat() {
-  const [answer, setAnswer] = useState(null);
   const [question, setQuestion] = useState("");
   const [displayQuestion, setDisplayQuestion] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const { setErrorMessage, dm } = useStore();
+  const { setErrorMessage } = useStore();
+
+  const { request, result, loading, error, setError } = useMidPlatform();
 
   useEffect(() => {}, []);
-
-  const onSend = async () => {
-    if (!question) return;
-    setAnswer("");
-    setDisplayQuestion("");
-    setLoading(true);
-    let res = await dm(question);
-    // console.log("res", res);
-    setLoading(false);
-    setDisplayQuestion(question);
-    if (res.flag < 0) {
-      //错误
-      setAnswer("");
-      setErrorMessage(ERROR_API["error"] + ":" + res.flag);
-    } else if (res.flag == 1 || res.result.length == 0 || res.result.filter((result) => result.type === "text").length == 0) {
-      // 无结果
-      let message = ERROR_API[1];
-      if (res.flag == 1 && res.result.length > 0) {
-        message = res.result[0].answer;
-      }
-      setAnswer({
-        text: message,
-      });
-    } else if (res.flag == 0 || res.flag == 2) {
-      // 显示结果清单里第一个text类型
-      setAnswer({
-        text: res.result.find((r) => r.type == "text").answer,
-      });
+  useEffect(() => {
+    if (error) {
+      setErrorMessage(error);
     }
-    setQuestion("");
+  }, [error]);
+
+  const onSubmit = async () => {
+    if (!question) return;
+    setDisplayQuestion("");
+    await request("dm", { type: "text", content: question }, (json) => {
+      if (json.flag == 1 || json.result.length == 0 || json.result.filter((r) => r.type === "text").length == 0) {
+        if (json.flag != 1) return { type: "text", answer: "没有找到答案" };
+        return json.result;
+      }
+      if (json.flag === 0 || json.flag === 2) {
+        return [json.result.find((r) => r.type == "text")];
+      }
+
+      setError("接口返回" + ":" + json.flag);
+      return [];
+    });
+    if (!error) {
+      setDisplayQuestion(question);
+      setQuestion("");
+    }
   };
 
   const onInputKeyPress = (e) => {
     if (e.key === "Enter") {
-      onSend();
+      onSubmit();
     }
   };
 
   return (
     <Container>
       <Content>
-        {(answer && (
+        {(result.length > 0 && (
           <ChatContent>
             <Header>
               <HeaderText>{title}</HeaderText>
@@ -220,7 +216,7 @@ function Chat() {
             <AnswerRow>
               <IcoAnswer>A</IcoAnswer>
               <RowText>
-                {answer.text.split("\n").map((l, i) => (
+                {result[0].answer.split("\n").map((l, i) => (
                   <p key={i}>{l}</p>
                 ))}
               </RowText>
@@ -236,7 +232,7 @@ function Chat() {
       <Footer>
         <Send>
           <Input disabled={loading} placeholder={"描述您的问题"} onKeyPress={onInputKeyPress} onChange={(e) => setQuestion(e.target.value)} value={question} />
-          <SendIcon disabled={!question || loading} onClick={onSend}>
+          <SendIcon disabled={!question || loading} onClick={onSubmit}>
             <Icons.Send fill={(question && !loading && "white") || "#eee"} />
           </SendIcon>
         </Send>

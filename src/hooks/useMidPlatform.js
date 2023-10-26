@@ -1,48 +1,60 @@
 import { useEffect, useState } from "react";
 import { useStore } from "../useStore.js";
+import { ERROR_API } from "../constants.js";
 
-const post = async (api, payload) => {
-  try {
-    
-    let response = await fetch(process.env.REACT_APP_MID_PLATFORM_URL_BASE + "/" + api, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json", // mode=no-cors时这个不生效，会422报错
-        Accept: "application/json",
-      },
-      body: oldVersion
-        ? JSON.stringify({ files: paths })
-        : JSON.stringify({
-            user_id: user_id,
-            type: "file",
-            content: paths[0],
-          }),
-    });
+export const useMidPlatform = () => {
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState([]);
+  const [error, setError] = useState(null); // user errors, caller may show them inline or in global error slider
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message);
+  const { getUser, setErrorMessage } = useStore();
+
+  const request = async (api, payload, onSuccess) => {
+    try {
+      setLoading(true);
+      setError("");
+      setResult([]);
+      let user = getUser();
+      if (!payload.user_id) payload.user_id = (user && user.id) || "admin";
+
+      const response = await fetch(process.env.REACT_APP_MID_PLATFORM_URL_BASE + "/" + api, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // mode=no-cors时这个不生效，会422报错
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok === false) {
+        throw new Error(ERROR_API["network"]);
+      }
+
+      if (response.status != 200) {
+        // const body = await response.json();
+        throw new Error(ERROR_API["server"] + ":" + response.status);
+      }
+
+      const json = await response.json();
+
+      if (json.flag < 0) {
+        throw new Error(ERROR_API["api"] + ":" + json.flag);
+      }
+      if (onSuccess) setResult(onSuccess(json));
+      else setResult(json.result);
+    } catch (err) {
+      // non user (validation) errors show in global error slider
+      setErrorMessage(err.message);
+    } finally {
+      setLoading(false);
     }
-    console.log(JSON.stringify(response));
-    const result = await response.json();
-    return result;
-  } catch (err) {
-    console.log("err", err);
-  }
-}
-
-
-export const useMidPlatform = (api, payload, onJSON) => {
-  const [result, setResult] = useState("");
-  const { getUser } = useStore();
+  };
 
   useEffect(() => {
-    let user = getUser()
-    if(!payload.user_id) payload.user_id = user && user.id || "admin"
-
-    post(api, payload)
-    
+    return () => {
+      // cancel last fetch
+    };
   }, []);
 
-  return result;
+  return { loading, setLoading, result, setResult, request, error, setError };
 };

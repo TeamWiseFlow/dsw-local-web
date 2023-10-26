@@ -27,8 +27,9 @@ export const ERROR_HTTP = {
 };
 
 export const ERROR_API = {
-  error: "服务器返回错误",
-  1: "未检索到相关信息",
+  network: "网络请求错误",
+  server: "服务器错误",
+  api: "接口错误",
 };
 
 // style constants

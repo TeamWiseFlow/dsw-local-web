@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import PocketBase from "pocketbase";
-import { ERROR_LOGIN, ERROR_HTTP } from "./constants";
+import { ERROR_HTTP } from "./constants";
 const pb = new PocketBase(process.env.REACT_APP_API_URL_BASE);
 console.log("init pocketbase @", process.env.REACT_APP_API_URL_BASE, process.env.NODE_ENV);
 // pocketbase
@@ -87,35 +87,6 @@ const useStore = create((set, get) => ({
         get().setErrorMessage(ERROR_HTTP[err.status] || ERROR_HTTP[0]);
       }
       return { error: true, status: err.status, ...err.response };
-    }
-  },
-  dm: async (question) => {
-    if (!question) return;
-    const API_URL = process.env.REACT_APP_MID_PLATFORM_URL_BASE + "/dm";
-
-    try {
-      let response = await fetch(API_URL, {
-        method: "POST", // *GET, POST, PUT, DELETE, etc.
-        headers: {
-          "Content-Type": "application/json", // mode=no-cors时这个不生效，会422报错
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          user_id: pb.authStore.model.id,
-          type: "text",
-          content: question,
-        }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message);
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (err) {
-      console.log("err", err);
     }
   },
   setErrorMessage: (msg) => {

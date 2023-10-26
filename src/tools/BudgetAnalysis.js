@@ -42,9 +42,14 @@ const Result = styled.div`
 `;
 
 const Link = styled.a`
-  display: flex;
+  display: inline-flex;
+  align-self: flex-start;
   align-items: center;
   cursor: pointer;
+  text-decoration: none;
+  background-color: #ffefdd;
+  padding: 12px 20px;
+  border-radius: 10px;
 
   & svg {
     width: 30px;
@@ -57,10 +62,23 @@ const Link = styled.a`
   }
 `;
 
+const LinkText = styled.span`
+  margin-left: 10px;
+  color: #393232;
+  text-decoration: none;
+  underline: none;
+`;
+
 const Modal = styled.div`
   position: absolute;
   width: 500px;
   height: auto;
+`;
+
+const Text = styled.div`
+  margin-top: 20px;
+  padding: 10px 20px;
+  color: #393232;
 `;
 
 const run = async (user_id, list, oldVersion = false) => {
@@ -99,6 +117,7 @@ export default function BudgetAnalysis({ oldVersion = false }) {
   const { setErrorMessage, getUser } = useStore();
   let [files, setFiles] = useState([]);
   let [resultFile, setResultFile] = useState("");
+  let [resultText, setResultText] = useState("");
   let [loading, setLoading] = useState(false);
 
   const { ref, isComponentVisible, setIsComponentVisible } = useComponentVisible(false);
@@ -130,6 +149,7 @@ export default function BudgetAnalysis({ oldVersion = false }) {
       setErrorMessage(ERROR_API["error"] + ":" + flag);
     } else if (flag === 21 && result.length == 2 && result[1].type == "file") {
       setResultFile(`${process.env.REACT_APP_RESULT_URL}${result[1].answer}`);
+      setResultText((result[2] && result[2].answer) || "");
     } else if (flag === 1) {
       setErrorMessage("输入的文件路径不对");
     } else if (flag === 2) {
@@ -179,10 +199,11 @@ export default function BudgetAnalysis({ oldVersion = false }) {
 
               <Link href={resultFile} target="_blank">
                 <Icons.Excel />
-                下载结果文件
+                <LinkText>下载结果文件</LinkText>
               </Link>
             </>
           )}
+          {resultText && <Text>{resultText}</Text>}
         </Result>
         {isComponentVisible && (
           <Modal ref={ref}>

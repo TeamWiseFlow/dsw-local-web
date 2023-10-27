@@ -5,7 +5,6 @@ import Icons from "../components/Icons";
 import SearchFile from "../components/SearchFile";
 import { useStore } from "../useStore";
 import Loading from "../components/Loading";
-}
 import { useMidPlatform } from "../hooks/useMidPlatform";
 
 const Container = styled.div`
@@ -79,7 +78,7 @@ const Text = styled.div`
   margin-top: 20px;
   padding: 10px 20px;
   color: #393232;
-  
+
   p {
     line-height: 1.7rem;
   }

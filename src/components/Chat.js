@@ -204,7 +204,7 @@ function Chat() {
   return (
     <Container>
       <Content>
-        {(result.length > 0 && (
+        {(result && result.length > 0 && (
           <ChatContent>
             <Header>
               <HeaderText>{title}</HeaderText>

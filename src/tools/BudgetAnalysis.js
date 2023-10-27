@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Button } from "../components/Common";
 import Icons from "../components/Icons";
 import SearchFile from "../components/SearchFile";
 import { useComponentVisible } from "../components/Common";
 import { useStore } from "../useStore";
-import { ERROR_API } from "../constants";
 import Loading from "../components/Loading";
+
+import { useMidPlatform } from "../hooks/useMidPlatform";
 
 const Container = styled.div`
   overflow-y: scroll;
@@ -81,46 +82,17 @@ const Text = styled.div`
   color: #393232;
 `;
 
-const run = async (user_id, list, oldVersion = false) => {
-  const API_URL = process.env.REACT_APP_MID_PLATFORM_URL_BASE + (oldVersion ? "/2022_budget_analysis" : "/new_budget_analysis");
-  const paths = list.map((i) => `${process.env.REACT_APP_CMS_FILE_DIR}/${i.collectionId}/${i.id}/${i.file}`);
-
-  try {
-    let response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json", // mode=no-cors时这个不生效，会422报错
-        Accept: "application/json",
-      },
-      body: oldVersion
-        ? JSON.stringify({ files: paths })
-        : JSON.stringify({
-            user_id: user_id,
-            type: "file",
-            content: paths[0],
-          }),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message);
-    }
-    console.log(JSON.stringify(response));
-    const result = await response.json();
-    return result;
-  } catch (err) {
-    console.log("err", err);
-  }
-};
-
 export default function BudgetAnalysis({ oldVersion = false }) {
-  const { setErrorMessage, getUser } = useStore();
+  const { setErrorMessage } = useStore();
   let [files, setFiles] = useState([]);
-  let [resultFile, setResultFile] = useState("");
-  let [resultText, setResultText] = useState("");
-  let [loading, setLoading] = useState(false);
-
   const { ref, isComponentVisible, setIsComponentVisible } = useComponentVisible(false);
+  const { request, result, loading, error, setError } = useMidPlatform();
+
+  useEffect(() => {
+    if (error) {
+      setErrorMessage(error);
+    }
+  }, [error]);
 
   const openSearch = () => {
     setIsComponentVisible(true);
@@ -135,33 +107,23 @@ export default function BudgetAnalysis({ oldVersion = false }) {
   };
 
   const onSubmit = async () => {
-    setLoading(true);
-    let user = getUser();
-    const res = await run((user && user.id) || "admin", files, oldVersion);
-    if (!res) {
-      setErrorMessage("服务器错误");
-      setLoading(false);
-      return;
-    }
-    const { flag, result } = res;
+    if (!files || files.length == 0) return;
 
-    if (flag < 0) {
-      setErrorMessage(ERROR_API["error"] + ":" + flag);
-    } else if (flag === 21 && result.length == 2 && result[1].type == "file") {
-      setResultFile(`${process.env.REACT_APP_RESULT_URL}${result[1].answer}`);
-      setResultText((result[2] && result[2].answer) || "");
-    } else if (flag === 1) {
-      setErrorMessage("输入的文件路径不对");
-    } else if (flag === 2) {
-      setErrorMessage("计算错误");
-    }
-    setLoading(false);
+    const paths = files.map((i) => `${process.env.REACT_APP_CMS_FILE_DIR}/${i.collectionId}/${i.id}/${i.file}`);
+    await request(oldVersion ? "2022_budget_analysis" : "new_budget_analysis", oldVersion ? { files: paths } : { type: "file", content: paths[0] }, (json) => {
+      if (json.flag === 21 && json.result.length == 2 && json.result[1].type == "file") {
+        return json.result;
+      }
+
+      setError("接口返回错误" + ":" + json.flag);
+      return [];
+    });
   };
 
   return (
     <Container>
       <Header>
-        <h1>新集采统计工具</h1>
+        <h1>{oldVersion ? "" : "新"}集采统计工具</h1>
       </Header>
       <Content>
         <Button style={{ cursor: "pointer" }} onClick={openSearch}>
@@ -192,18 +154,18 @@ export default function BudgetAnalysis({ oldVersion = false }) {
           </Button>
         )}
         <Result>
-          {resultFile && (
+          {result && result[1] && (
             <>
               <h2>汇总结果</h2>
               <hr></hr>
 
-              <Link href={resultFile} target="_blank">
+              <Link href={`${process.env.REACT_APP_RESULT_URL}${result[1].answer}`} target="_blank">
                 <Icons.Excel />
                 <LinkText>下载结果文件</LinkText>
               </Link>
             </>
           )}
-          {resultText && <Text>{resultText}</Text>}
+          {result && result[0] && <Text>{result[0].answer}</Text>}
         </Result>
         {isComponentVisible && (
           <Modal ref={ref}>

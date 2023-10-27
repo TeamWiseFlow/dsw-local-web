@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Button } from "../components/Common";
+import { Button, useComponentVisible, newlineToParagraphs } from "../components/Common";
 import Icons from "../components/Icons";
 import SearchFile from "../components/SearchFile";
-import { useComponentVisible } from "../components/Common";
 import { useStore } from "../useStore";
 import Loading from "../components/Loading";
-
+}
 import { useMidPlatform } from "../hooks/useMidPlatform";
 
 const Container = styled.div`
@@ -80,6 +79,10 @@ const Text = styled.div`
   margin-top: 20px;
   padding: 10px 20px;
   color: #393232;
+  
+  p {
+    line-height: 1.7rem;
+  }
 `;
 
 export default function BudgetAnalysis({ oldVersion = false }) {
@@ -165,7 +168,7 @@ export default function BudgetAnalysis({ oldVersion = false }) {
               </Link>
             </>
           )}
-          {result && result[0] && <Text>{result[0].answer}</Text>}
+          {result && result[0] && <Text>{newlineToParagraphs(result[0].answer)}</Text>}
         </Result>
         {isComponentVisible && (
           <Modal ref={ref}>

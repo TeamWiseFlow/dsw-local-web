@@ -41,3 +41,13 @@ export function useComponentVisible(initialIsVisible) {
 
   return { ref, isComponentVisible, setIsComponentVisible };
 }
+
+export function newlineToParagraphs(str) {
+  return (
+    <>
+      {str.split("\n").map((l, i) => (
+        <p key={i}>{l}</p>
+      ))}
+    </>
+  );
+}

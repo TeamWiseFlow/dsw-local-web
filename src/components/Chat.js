@@ -4,6 +4,7 @@ import Icons from "./Icons";
 import { useStore } from "../useStore";
 
 import Loading from "./Loading";
+import { newlineToParagraphs } from "./Common";
 
 import { useMidPlatform } from "../hooks/useMidPlatform";
 
@@ -215,11 +216,7 @@ function Chat() {
             </QuestionRow>
             <AnswerRow>
               <IcoAnswer>A</IcoAnswer>
-              <RowText>
-                {result[0].answer.split("\n").map((l, i) => (
-                  <p key={i}>{l}</p>
-                ))}
-              </RowText>
+              <RowText>{newlineToParagraphs(result[0].answer)}</RowText>
             </AnswerRow>
           </ChatContent>
         )) || (

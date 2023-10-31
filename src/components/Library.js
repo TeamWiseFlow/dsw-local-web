@@ -176,7 +176,7 @@ const Toolbar = styled.div`
 `;
 
 const SortButton = styled.div`
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   cursor: pointer;
   color: var(--text-muted);
   user-select: none;
@@ -188,13 +188,12 @@ const ListExt = styled.ul`
 `;
 const ListItemExt = styled.li`
   display: inline-block;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: var(--text-muted);
+  background-color: ${(props) => (props.disabled ? "white" : "#eee")};
   line-height: 12px;
   border-radius: 20px;
-  background-color: white;
   color: #666;
-  font-weight: bold;
   padding: 8px 10px;
   margin-right: 10px;
   user-select: none;
@@ -249,6 +248,7 @@ const UploadButton = ({ disabled, accept, onSelectFiles }) => {
 const Library = ({}) => {
   const [files, setFiles] = useState([]);
   const [exts, setExts] = useState({}); // {pdf:true, doc:false}
+  const [allExts, setAllExts] = useState(true);
   const [deleting, setDeleting] = useState("");
   const [keywords, setKeywords] = useState("");
   const [orderBy, setOrderBy] = useState("date-asc"); // date-asc, date-desc, name-asc, name-desc
@@ -267,6 +267,17 @@ const Library = ({}) => {
       setErrorMessage(error);
     }
   }, [error]);
+
+  useEffect(() => {
+    let notAll = false;
+    for (var ext in exts) {
+      if (exts[ext]) {
+        notAll = true;
+        break;
+      }
+    }
+    setAllExts(!notAll);
+  }, [exts]);
 
   useEffect(() => {
     if (!keywords) {
@@ -290,22 +301,38 @@ const Library = ({}) => {
 
   useEffect(() => {}, [files]);
 
-  const _resetExts = (files) => {
+  const _resetExts = (files, enableExt) => {
     let exts = {};
+    let allExts = true;
     for (var i = 0; i < files.length; i++) {
       if (keywords && files[i].notInSearch) continue;
-      exts[files[i].file.split(".").pop()] = true;
+      let displayExt = FILE_EXT[files[i].file.split(".").pop()].toLowerCase();
+      exts[displayExt] = false;
+    }
+    if (enableExt) {
+      exts[enableExt] = true;
+      allExts = false;
     }
     setExts(exts);
+    setAllExts(allExts);
+    return exts;
   };
 
-  const _filterFilesByExt = (files) => {
+  const _filterFilesByExt = (files, exts, allExts) => {
     if (Object.keys(exts).length > 0) {
-      for (var i = 0; i < files.length; i++) {
-        files[i].hidden = false;
-      }
-      for (var i = 0; i < files.length; i++) {
-        files[i].hidden = !exts[files[i].file.split(".").pop()];
+      if (!allExts) {
+        for (var i = 0; i < files.length; i++) {
+          files[i].hidden = false;
+        }
+
+        for (var i = 0; i < files.length; i++) {
+          let displayExt = FILE_EXT[files[i].file.split(".").pop()].toLowerCase();
+          files[i].hidden = !exts[displayExt];
+        }
+      } else {
+        for (var i = 0; i < files.length; i++) {
+          files[i].hidden = false;
+        }
       }
       setFiles(files);
     }
@@ -410,9 +437,13 @@ const Library = ({}) => {
   };
 
   const toggleExt = (ext) => {
-    exts[ext] = !exts[ext];
-    setExts({ ...exts });
-    _filterFilesByExt(files);
+    let exts = _resetExts(files, ext);
+    _filterFilesByExt(files, exts);
+  };
+
+  const showAllExts = () => {
+    let exts = _resetExts(files, null);
+    _filterFilesByExt(files, exts, true);
   };
 
   return (
@@ -447,6 +478,9 @@ const Library = ({}) => {
         {!loading && (
           <Toolbar>
             <ListExt>
+              <ListItemExt key="all" disabled={!allExts} onClick={showAllExts}>
+                全部类型
+              </ListItemExt>
               {Object.keys(exts).map((ext) => (
                 <ListItemExt key={ext} disabled={!exts[ext]} onClick={toggleExt.bind(this, ext)}>
                   {ext}

@@ -24,6 +24,9 @@ const useStore = create((set, get) => ({
     pb.authStore.clear();
     set({ token: "" });
   },
+  getToken: () => {
+    return pb.authStore.token;
+  },
   getUser: () => {
     return pb.authStore.model;
   },

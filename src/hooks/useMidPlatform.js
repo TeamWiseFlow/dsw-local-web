@@ -7,7 +7,7 @@ export const useMidPlatform = () => {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null); // user errors, caller may show them inline or in global error slider
 
-  const { getUser, setErrorMessage } = useStore();
+  const { getUser, getToken, setErrorMessage } = useStore();
 
   const request = async (api, payload, onSuccess) => {
     try {
@@ -22,6 +22,7 @@ export const useMidPlatform = () => {
         headers: {
           "Content-Type": "application/json", // mode=no-cors时这个不生效，会422报错
           Accept: "application/json",
+          Authorization: getToken(),
         },
         body: JSON.stringify(payload),
       });

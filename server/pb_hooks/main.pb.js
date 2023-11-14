@@ -91,8 +91,8 @@ routerAdd(
       method: "POST",
       body: JSON.stringify(body.payload),
       headers: {
-        "content-type": "application/json",
-        accept: "application/json",
+        "Content-type": "application/json",
+        Accept: "application/json",
         //authorization: $apis.requestInfo(e.httpContext).headers["authorization"],
       },
       timeout: 120, // in seconds

@@ -85,7 +85,7 @@ routerAdd(
 
     const body = $apis.requestInfo(c).data;
     body.payload.user_id = (admin && admin.id) || "admin";
-    console.log("body", JSON.stringify(body, null, 2));
+    //console.log("body", JSON.stringify(body, null, 2));
     const res = $http.send({
       url: config.midplatform.baseURL + "/" + body.api,
       method: "POST",
@@ -97,8 +97,7 @@ routerAdd(
       },
       timeout: 120, // in seconds
     });
-    console.log("res", JSON.stringify(res, null, 2));
-
+    //console.log("res", JSON.stringify(res, null, 2));
     return c.json(res.statusCode, res.json);
   },
   $apis.requireAdminAuth()

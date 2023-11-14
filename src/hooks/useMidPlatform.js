@@ -24,18 +24,19 @@ export const useMidPlatform = () => {
         },
         body: JSON.stringify({ api, payload }),
       });
-      console.log("response:", JSON.stringify(response, null, 2));
+      // console.log("response:", JSON.stringify(response, null, 2));
 
       if (response.ok === false) {
         throw new Error(ERROR_API["network"]);
       }
 
-      if (response.statusCode != 200) {
+      if (response.status != 200) {
         // const body = await response.json();
         throw new Error(ERROR_API["server"] + ":" + response.status);
       }
 
       const json = await response.json();
+      //console.log("response.json():", JSON.stringify(json, null, 2));
 
       if (json.flag < 0) {
         throw new Error(ERROR_API["api"] + ":" + json.flag);

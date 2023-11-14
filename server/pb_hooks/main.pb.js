@@ -96,7 +96,7 @@ routerAdd(
       },
       timeout: 120, // in seconds
     });
-    //console.log("res", JSON.stringify(res, null, 2));
+    console.log("res", JSON.stringify(res, null, 2));
 
     return c.json(res.statusCode, res.json);
   },

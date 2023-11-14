@@ -1,0 +1,15 @@
+# example systemd service file
+[Unit]
+Description = pocketbase
+
+[Service]
+Type           = simple
+User           = root
+Group          = root
+LimitNOFILE    = 4096
+Restart        = always
+RestartSec     = 5s
+ExecStart      = /root/pb/pocketbase serve --http="pb.lingfei.dev:80" --https="pb.lingfei.dev:443"
+
+[Install]
+WantedBy = multi-user.target

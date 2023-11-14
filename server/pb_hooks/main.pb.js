@@ -85,14 +85,15 @@ routerAdd(
 
     const body = $apis.requestInfo(c).data;
     body.payload.user_id = (admin && admin.id) || "admin";
-    // console.log("body", JSON.stringify(body, null, 2));
+    console.log("body", JSON.stringify(body, null, 2));
     const res = $http.send({
       url: config.midplatform.baseURL + "/" + body.api,
       method: "POST",
       body: JSON.stringify(body.payload),
       headers: {
         "content-type": "application/json",
-        authorization: $apis.requestInfo(e.httpContext).headers["authorization"],
+        accept: "application/json",
+        //authorization: $apis.requestInfo(e.httpContext).headers["authorization"],
       },
       timeout: 120, // in seconds
     });

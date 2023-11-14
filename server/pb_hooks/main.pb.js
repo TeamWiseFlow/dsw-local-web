@@ -70,3 +70,35 @@ onRecordBeforeDeleteRequest((e) => {
   // proceed normal deletion by return nil
   return true;
 }, "documents");
+
+routerAdd(
+  "POST",
+  "/api/midplatform",
+  (c) => {
+    const config = require(`${__hooks}/config.js`);
+    // console.log(JSON.stringify(config, null, 2));
+    const admin = c.get("admin");
+
+    // if(!admin){
+    //   return c.json(401, { "message": "Unauthorized" })
+    // }
+
+    const body = $apis.requestInfo(c).data;
+    body.payload.user_id = (admin && admin.id) || "admin";
+    // console.log("body", JSON.stringify(body, null, 2));
+    const res = $http.send({
+      url: config.midplatform.baseURL + "/" + body.api,
+      method: "POST",
+      body: JSON.stringify(body.payload),
+      headers: {
+        "content-type": "application/json",
+        authorization: $apis.requestInfo(e.httpContext).headers["authorization"],
+      },
+      timeout: 120, // in seconds
+    });
+    //console.log("res", JSON.stringify(res, null, 2));
+
+    return c.json(res.statusCode, res.json);
+  },
+  $apis.requireAdminAuth()
+);

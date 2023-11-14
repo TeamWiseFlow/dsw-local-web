@@ -14,6 +14,47 @@ export const useMidPlatform = () => {
       setLoading(true);
       setError("");
       setResult(null);
+
+      const response = await fetch(process.env.REACT_APP_API_URL_BASE + "/api/midplatform", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // mode=no-cors时这个不生效，会422报错
+          Accept: "application/json",
+          Authorization: getToken(),
+        },
+        body: JSON.stringify({ api, payload }),
+      });
+      console.log("response:", JSON.stringify(response, null, 2));
+
+      if (response.ok === false) {
+        throw new Error(ERROR_API["network"]);
+      }
+
+      if (response.statusCode != 200) {
+        // const body = await response.json();
+        throw new Error(ERROR_API["server"] + ":" + response.status);
+      }
+
+      const json = await response.json();
+
+      if (json.flag < 0) {
+        throw new Error(ERROR_API["api"] + ":" + json.flag);
+      }
+      if (onSuccess) setResult(onSuccess(json));
+      else setResult(json.result);
+    } catch (err) {
+      // non user (validation) errors show in global error slider
+      setErrorMessage(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const request_direct = async (api, payload, onSuccess) => {
+    try {
+      setLoading(true);
+      setError("");
+      setResult(null);
       let user = getUser();
       if (!payload.user_id) payload.user_id = (user && user.id) || "admin";
 

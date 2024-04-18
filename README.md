@@ -10,6 +10,10 @@
 
 在backend/llms 目录中，我们提供了部署脚本和wrapper示例代码，但是并未完成与后端主流程代码（dm.py)的整合。
 
+## 基于本项目现阶段的项目demo
+
+https://openi.pcl.ac.cn/WiseFlow/dsw-web/src/branch/master/assets/%e7%bb%8d%e5%85%b4%e8%b4%a2%e6%94%bf%e5%b1%80demo.mp4
+
 ## roadmap
 
 对于本项目，或者说该类型的应用场景，应该着眼于如下三个方面的深入开发：

@@ -12,7 +12,10 @@
 
 ## 基于本项目现阶段的项目demo
 
-{% include iframe src="//player.bilibili.com/player.html?bvid=BV1kp421D741&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" %}
+<div>
+    <!-- B站视频嵌入代码 -->
+    <iframe src="//player.bilibili.com/player.html?bvid=BV1kp421D741&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+</div>
 
 ## roadmap
 

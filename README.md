@@ -19,6 +19,9 @@
 
 ## roadmap
 
+![demo](assets/demo.mp4)
+
+
 对于本项目，或者说该类型的应用场景，应该着眼于如下三个方面的深入开发：
 
 1、文档智能 —— 更加智能的处理各种类型文档，尤其是复杂文档的ocr、layout解析等。本项目代码仓对应 backend/scholar/document process

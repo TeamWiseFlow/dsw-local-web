@@ -12,7 +12,7 @@
 
 ## 基于本项目现阶段的项目demo
 
-https://openi.pcl.ac.cn/WiseFlow/dsw-web/src/branch/master/assets/%e7%bb%8d%e5%85%b4%e8%b4%a2%e6%94%bf%e5%b1%80demo.mp4
+<iframe src="//player.bilibili.com/player.html?bvid=BV1kp421D741&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
 ## roadmap
 

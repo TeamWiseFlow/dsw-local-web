@@ -1,0 +1,39 @@
+logger:
+  version: 1
+  disable_existing_loggers: False
+  formatters:
+    info:
+      format: "%(asctime)s-%(levelname)s-%(name)s::%(module)s|%(lineno)s:: %(message)s"
+    error:
+      format: "%(asctime)s-%(levelname)s-%(name)s-%(process)d::%(module)s|%(lineno)s:: %(message)s"
+  handlers:
+    debug:
+      level: "DEBUG"
+      formatter: "info"
+      class : "logging.StreamHandler"
+      stream  : "ext://sys.stdout"
+    info:
+      level: "INFO"
+      formatter: "info"
+      class : "logging.handlers.RotatingFileHandler"
+      filename: "logs/info.log"
+      maxBytes: 1048576
+      backupCount: 10
+    error:
+      level: "WARNING"
+      formatter: "error"
+      class : "logging.FileHandler"
+      filename: "logs/error.log"
+      mode: "a" 
+  loggers:
+    "": 
+      handlers: 
+        - info
+        - error
+      level: "INFO"
+      propagate: False
+    main:
+      handlers:
+        - debug
+      level: "DEBUG"
+      propagate: False

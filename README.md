@@ -159,3 +159,13 @@ cd /mnt/server & pocketbase serve
 
 查看端口进程：lsof -i :3000
 杀死端口进程：kill -9 {id}
+
+# Citation
+
+如果您在相关工作中参考或引用了本项目的部分或全部，请注明如下信息：
+
+```
+Author：WiseFlow Team
+https://openi.pcl.ac.cn/WiseFlow/dsw-web
+Licensed under Apache2.0
+```
